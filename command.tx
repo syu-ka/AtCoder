@@ -1,0 +1,11 @@
+// main.jsを開く.
+code main.js
+
+// 個別テスト（手動入力）.
+node main.js
+
+// 全体テスト.
+oj-t-js
+
+// 提出（Please type "pra1"と言われたらpra1と書く）.
+acc-s-js
