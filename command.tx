@@ -1,3 +1,6 @@
+// そのコンテストの環境を作る.(コンテスト名＝コンテストURL(contests/以下)例えばabc386).
+acc new `コンテスト名`
+
 // main.jsを開く.
 code main.js
 
