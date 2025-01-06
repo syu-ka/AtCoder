@@ -37,26 +37,26 @@ function Main(input) {
     for (let i = Ls.length - 1; i <= Rs.length - 1; i++) {
 
         for (let k = base; k < 10; k++) {
-            // console.log("k="+k);
-            count += k ** i;
-            if (k == Rs[0] - 1 && i == Rs.length - 1) {
-
-                const LsShift = Ls;
-                const LsShiftRetrn = LsShift.shift(); // Lの先頭の桁（最も大きい位）の数.
-                count -= (LsShiftRetrn == 1 ? 0 : parseInt(LsShift.join(""), LsShiftRetrn)) + 1;
-                if (isSnakeNumberL) {
-                    count++;
-                }
-
-                const RsShift = Rs;
-                const RsShiftRetrn = RsShift.shift(); // Rの先頭の桁（最も大きい位）の数.
-                count += (RsShiftRetrn == 1 ? 0 : parseInt(RsShift.join(""), RsShiftRetrn)) + 1;
-
+            if (k == Rs[0] && i == Rs.length - 1) {
                 break;
             }
+            count += k ** i;
         }
         base = 1;
     }
+
+    const LsShift = Ls;
+    const LsShiftRetrn = LsShift.shift(); // Lの先頭の桁（最も大きい位）の数.
+    count -= (LsShiftRetrn == 1 ? 0 : parseInt(LsShift.join(""), LsShiftRetrn)) + 1;
+    if (isSnakeNumberL) {
+        count++;
+    }
+
+    const RsShift = Rs;
+    const RsShiftRetrn = RsShift.shift(); // Rの先頭の桁（最も大きい位）の数.
+    count += (RsShiftRetrn == 1 ? 0 : parseInt(RsShift.join(""), RsShiftRetrn)) + 1;
+
+
     console.log(count);
 }
 
