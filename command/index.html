@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="main.js"></script>
+    <title>コマンドCopy</title>
+</head>
+<body>
+    <h1>コマンドCopy</h1>
+    <label for="contestName">参加コンテスト：</label>
+    <input type="text" name="contestName" id="contestName">
+    <button type="submit" onclick="submit('contestName','copytxt2')">決定</button>
+    a~gまで選べるようにする
+    <p id="copytxt">コピーする内容</p>
+    <button onclick="copyButton ('copytxt')">コピー実行</button>
+    <p id="copytxt2">コピー2</p>
+    <button onclick="copyButton ('copytxt2')">コピー実行</button>
+</body>
+</html>
