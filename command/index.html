@@ -8,12 +8,25 @@
 </head>
 <body>
     <h1>コマンドCopy</h1>
-    <label for="contestName">参加コンテスト：</label>
-    <input type="text" name="contestName" id="contestName">
-    <button type="submit" onclick="submit('contestName','copytxt2')">決定</button>
-    a~gまで選べるようにする
-    <p id="copytxt">コピーする内容</p>
-    <button onclick="copyButton ('copytxt')">コピー実行</button>
+    <!-- <form id="form"> -->
+    <label for="contest_name">参加コンテスト：</label>
+    <input type="text" name="contest_name" id="contest_name">
+
+    <label for="problem_select">問題：</label>
+    <select name="problems" id="problem_select">
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+        <option value="F">F</option>
+        <option value="G">G</option>
+    </select>
+    <button type="submit" onclick="submit('contest_name','copytxt2')">決定</button>
+<!-- </form> -->
+    
+    <p id="acc_new">acc new `コンテスト名`</p>
+    <button onclick="copyButton ('acc_new')">コピー実行</button>
     <p id="copytxt2">コピー2</p>
     <button onclick="copyButton ('copytxt2')">コピー実行</button>
 </body>

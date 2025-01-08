@@ -9,16 +9,14 @@
 
 
 
-
-
-function submit(contestName, copytxt2) {
-    let contestNameElement = document.getElementById(contestName);
+function submit(contest_name, copytxt2) {
+    let contestNameElement = document.getElementById(contest_name);
 
     let txt2Element = document.getElementById(copytxt2);
 
     // フォームの入力内容にテキスト内容を変更.
     alert(txt2Element.textContent);
-    txt2Element.textContent = contestNameElement.value;
+    txt2Element.textContent = "コピー内容" + contestNameElement.value;
 
 }
 

@@ -1,6 +1,9 @@
 // そのコンテストの環境を作る.(コンテスト名＝コンテストURL(contests/以下)例えばabc386).
 acc new `コンテスト名`
 
+// AtCoderファイルから問題ファイルまで移動する.
+cd `コンテスト名`/`問題名`
+
 // main.jsを開く.
 code main.js
 
@@ -12,3 +15,21 @@ oj-t-js
 
 // 提出（Please type "pra1"と言われたらpra1と書く）.
 acc-s-js
+
+// 問題のファイルからAtCoderファイルまで移動する.
+cd ../../
+
+// AtCoderファイルから問題ファイルまで移動する.
+cd `コンテスト名`/`問題名`
+
+// git 状態を見る.
+git status
+
+// git ステージに乗せる.
+git add .
+
+// git コミットする.
+git commit -m ""
+
+// git リモートリポジトリに送る.
+git push origin main
