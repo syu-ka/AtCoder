@@ -38,7 +38,17 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        button {
+        .command-list {
+            margin-top: 20px;
+        }
+        .command-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px dashed #ccc;
+            border-radius: 4px;
+        }
+        #generate {
             display: block;
             width: 100%;
             padding: 10px;
@@ -48,23 +58,44 @@
             border-radius: 4px;
             font-size: 16px;
             cursor: pointer;
+            text-align: center;
         }
-        button:hover {
+        #generate:hover {
             background-color: #0056b3;
         }
-        .output {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border: 1px dashed #ccc;
-            border-radius: 4px;
-        }
         .copy-btn {
-            margin-top: 10px;
+            margin-top: 5px;
+            padding: 5px 10px;
             background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
         }
         .copy-btn:hover {
             background-color: #218838;
+        }
+        .meaning-btn {
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: #ffc107;
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .meaning-btn:hover {
+            background-color: #e0a800;
+        }
+        .description {
+            display: none;
+            margin-top: 5px;
+            padding: 5px;
+            background-color: #f8f9fa;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -73,20 +104,31 @@
     <div class="container">
         <div class="form-group">
             <label for="contest">Contest Name</label>
-            <input type="text" id="contest" placeholder="e.g., abc123">
+            <input type="text" id="contest" placeholder="abc123">
         </div>
         <div class="form-group">
             <label for="problem">Problem Name</label>
-            <input type="text" id="problem" placeholder="e.g., a">
+            <input type="text" id="problem" placeholder="a,b,c...">
         </div>
-        <button id="generate">Generate Command</button>
-        <div class="output" id="output" style="display: none;">
-            <p id="command"></p>
-            <button class="copy-btn" id="copy">Copy to Clipboard</button>
-        </div>
+        <button id="generate">Generate Commands</button>
+        <div class="command-list" id="commandList" style="display: none;"></div>
     </div>
 
     <script>
+        const commandsTemplate = [
+            { text: 'acc new {contest}', description: 'そのコンテストの環境を作る.' },
+            { text: 'cd {contest}/{problem}', description: 'AtCoderファイルから問題ファイルまで移動する.' },
+            { text: 'code main.js', description: 'main.jsを開く.' },
+            { text: 'node main.js', description: '個別テスト（手動入力）.' },
+            { text: 'oj-t-js', description: '全体テスト.' },
+            { text: 'acc-s-js', description: '提出（Please type "pra1"と言われたらpra1と書く）.' },
+            { text: 'cd ../../', description: '問題のファイルからAtCoderファイルまで移動する.' },
+            { text: 'git status', description: 'git 状態を見る.' },
+            { text: 'git add .', description: 'git ステージに乗せる.' },
+            { text: 'git commit -m ""', description: 'git コミットする.' },
+            { text: 'git push origin main', description: 'git リモートリポジトリに送る.' },
+        ];
+
         document.getElementById('generate').addEventListener('click', function () {
             const contest = document.getElementById('contest').value.trim();
             const problem = document.getElementById('problem').value.trim();
@@ -96,19 +138,52 @@
                 return;
             }
 
-            const command = `cd ${contest} && g++ ${problem}.cpp -o ${problem} && ./${problem}`;
-            document.getElementById('command').textContent = command;
-            document.getElementById('output').style.display = 'block';
-        });
+            const commandList = document.getElementById('commandList');
+            commandList.innerHTML = '';
 
-        document.getElementById('copy').addEventListener('click', function () {
-            const command = document.getElementById('command').textContent;
+            commandsTemplate.forEach(commandObj => {
+                const commandText = commandObj.text.replace('{contest}', contest).replace('{problem}', problem);
+                const commandItem = document.createElement('div');
+                commandItem.className = 'command-item';
 
-            navigator.clipboard.writeText(command).then(() => {
-                alert('Command copied to clipboard!');
-            }).catch(err => {
-                alert('Failed to copy: ' + err);
+                const commandPre = document.createElement('pre');
+                commandPre.textContent = commandText;
+                commandItem.appendChild(commandPre);
+
+                const copyButton = document.createElement('button');
+                copyButton.className = 'copy-btn';
+                copyButton.textContent = 'Copy';
+                copyButton.addEventListener('click', function () {
+                    navigator.clipboard.writeText(commandText).then(() => {
+                        alert('Command copied to clipboard!');
+                    }).catch(err => {
+                        alert('Failed to copy: ' + err);
+                    });
+                });
+
+                const meaningButton = document.createElement('button');
+                meaningButton.className = 'meaning-btn';
+                meaningButton.textContent = 'Meaning';
+                meaningButton.addEventListener('click', function () {
+                    if (descriptionDiv.style.display === 'none') {
+                        descriptionDiv.style.display = 'block';
+                    } else {
+                        descriptionDiv.style.display = 'none';
+                    }
+                });
+
+                const descriptionDiv = document.createElement('div');
+                descriptionDiv.className = 'description';
+                descriptionDiv.style.display = 'none';
+                descriptionDiv.textContent = commandObj.description;
+
+                commandItem.appendChild(copyButton);
+                commandItem.appendChild(meaningButton);
+                commandItem.appendChild(descriptionDiv);
+                commandList.appendChild(commandItem);
             });
+
+            commandList.style.display = 'block';
         });
     </script>
 </body>
