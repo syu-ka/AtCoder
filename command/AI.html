@@ -80,10 +80,15 @@
         .command-text {
             font-family: monospace;
             flex: 1;
+            margin-right: 10px;
         }
         .commit-input {
-            flex: 1;
-            margin-right: 10px;
+            border: none;
+            background: transparent;
+            font-family: monospace;
+            font-size: 14px;
+            padding: 0;
+            color: #333;
         }
         .copy-btn {
             padding: 5px 10px;
@@ -184,6 +189,8 @@
                     .replace('{problem}', problem);
 
                 if (commandText.includes('{commitMessage}')) {
+                    const preText = 'git commit -m "';
+                    const postText = '"';
                     const commitInput = document.createElement('input');
                     commitInput.type = 'text';
                     commitInput.placeholder = 'Enter commit message';
@@ -198,7 +205,7 @@
                             alert('Please enter a commit message.');
                             return;
                         }
-                        const finalCommand = commandText.replace('{commitMessage}', commitMessage);
+                        const finalCommand = `${preText}${commitMessage}${postText}`;
                         navigator.clipboard.writeText(finalCommand).then(() => {
                             alertBox.style.display = 'block';
                             setTimeout(() => {
@@ -207,7 +214,12 @@
                         });
                     });
 
+                    const commandDisplay = document.createElement('div');
+                    commandDisplay.className = 'command-text';
+                    commandDisplay.textContent = preText;
+                    commandItem.appendChild(commandDisplay);
                     commandItem.appendChild(commitInput);
+                    commandItem.appendChild(document.createTextNode(postText));
                     commandItem.appendChild(copyButton);
                 } else {
                     const commandPre = document.createElement('pre');
