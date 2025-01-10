@@ -32,11 +32,37 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="text"] {
+        input[type="text"], select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button#create {
+            background-color: #007bff;
+        }
+        button#test {
+            background-color: #28a745;
+        }
+        button#git {
+            background-color: #ffc107;
+            color: #333;
+        }
+        button#next {
+            background-color: #17a2b8;
         }
         .command-list {
             margin-top: 20px;
@@ -55,47 +81,43 @@
             font-family: monospace;
             flex: 1;
         }
-        .button-group {
-            display: flex;
-            align-items: center;
-            margin-left: 5px;
-        }
         .copy-btn {
+            margin-left: 10px;
             padding: 5px 10px;
-            background-color: #28a745;
-            color: #fff;
+            font-size: 14px;
+            background-color: #007bff;
+            color: white;
             border: none;
             border-radius: 4px;
-            font-size: 14px;
             cursor: pointer;
-            margin-left: auto;
         }
-        .copy-btn:hover {
-            background-color: #218838;
-        }
-        .meaning-btn {
-            width: 16px;
-            height: 16px;
-            color: #ccc;
-            border: solid 1px #ccc;
-            border-radius: 50%;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 5px;
-        }
-        .meaning-btn:hover {
-            background-color: #bbb;
-        }
-        .description {
+        .alert {
             display: none;
-            margin-top: 5px;
-            padding: 5px;
-            background-color: #f8f9fa;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+        }
+        .commit-container {
+            display: none;
+            margin-top: 20px;
+        }
+        .commit-container input {
+            width: calc(100% - 100px);
+            margin-right: 10px;
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
+        }
+        .commit-container button {
+            padding: 10px;
+            background-color: #ffc107;
+            border: none;
+            border-radius: 4px;
+            color: #333;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -108,28 +130,63 @@
         </div>
         <div class="form-group">
             <label for="problem">Problem Name</label>
-            <input type="text" id="problem" placeholder="a,b,c...">
+            <select id="problem">
+                <option value="a">a</option>
+                <option value="b">b</option>
+                <option value="c">c</option>
+                <option value="d">d</option>
+                <option value="e">e</option>
+                <option value="f">f</option>
+                <option value="g">g</option>
+            </select>
         </div>
-        <button id="generate">Generate Commands</button>
+        <div class="button-group">
+            <button id="create">Create New</button>
+            <button id="test">Test & Submit</button>
+            <button id="git">Git</button>
+            <button id="next">Next Problem</button>
+        </div>
+        <div class="commit-container" id="commitContainer">
+            <input type="text" id="commitMessage" placeholder="Enter commit message">
+            <button id="commitSubmit">Submit Commit</button>
+        </div>
         <div class="command-list" id="commandList" style="display: none;"></div>
+        <div class="alert" id="alert">Copied to clipboard!</div>
     </div>
 
     <script>
-        const commandsTemplate = [
-            { text: 'acc new {contest}', description: 'そのコンテストの環境を作る.' },
-            { text: 'cd {contest}/{problem}', description: 'AtCoderファイルから問題ファイルまで移動する.' },
-            { text: 'code main.js', description: 'main.jsを開く.' },
-            { text: 'node main.js', description: '個別テスト（手動入力）.' },
-            { text: 'oj-t-js', description: '全体テスト.' },
-            { text: 'acc-s-js', description: '提出（Please type "pra1"と言われたらpra1と書く）.' },
-            { text: 'cd ../../', description: '問題のファイルからAtCoderファイルまで移動する.' },
-            { text: 'git status', description: 'git 状態を見る.' },
-            { text: 'git add .', description: 'git ステージに乗せる.' },
-            { text: 'git commit -m ""', description: 'git コミットする.' },
-            { text: 'git push origin main', description: 'git リモートリポジトリに送る.' },
-        ];
+        const commands = {
+            create: [
+                { text: 'acc new {contest}' },
+                { text: 'cd {contest}/{problem}' },
+                { text: 'code main.js' },
+            ],
+            test: [
+                { text: 'node main.js' },
+                { text: 'oj-t-js' },
+                { text: 'acc-s-js' },
+            ],
+            git: [
+                { text: 'cd ../../' },
+                { text: 'git status' },
+                { text: 'git add .' },
+                { text: 'git commit -m ""' },
+                { text: 'git push origin main' },
+                { text: 'cd {contest}/{problem}' },
+            ],
+            next: [
+                { text: 'cd ../../' },
+                { text: 'cd {contest}/{problem}' },
+                { text: 'code main.js' },
+            ],
+        };
 
-        document.getElementById('generate').addEventListener('click', function () {
+        const commandList = document.getElementById('commandList');
+        const alertBox = document.getElementById('alert');
+        const commitContainer = document.getElementById('commitContainer');
+        const commitMessageInput = document.getElementById('commitMessage');
+
+        function generateCommands(type) {
             const contest = document.getElementById('contest').value.trim();
             const problem = document.getElementById('problem').value.trim();
 
@@ -138,11 +195,17 @@
                 return;
             }
 
-            const commandList = document.getElementById('commandList');
             commandList.innerHTML = '';
 
-            commandsTemplate.forEach(commandObj => {
-                const commandText = commandObj.text.replace('{contest}', contest).replace('{problem}', problem);
+            commands[type].forEach(commandObj => {
+                let commandText = commandObj.text
+                    .replace('{contest}', contest)
+                    .replace('{problem}', problem);
+
+                if (type === 'git' && commandObj.text.includes('git commit -m ""')) {
+                    const commitMessage = commitMessageInput.value.trim();
+                    commandText = `git commit -m "${commitMessage}"`;
+                }
 
                 const commandItem = document.createElement('div');
                 commandItem.className = 'command-item';
@@ -152,47 +215,46 @@
                 commandPre.textContent = commandText;
                 commandItem.appendChild(commandPre);
 
-                const meaningButton = document.createElement('button');
-                meaningButton.className = 'meaning-btn';
-                meaningButton.textContent = '?';
-                meaningButton.addEventListener('click', function () {
-                    if (descriptionDiv.style.display === 'none') {
-                        descriptionDiv.style.display = 'block';
-                    } else {
-                        descriptionDiv.style.display = 'none';
-                    }
-                });
-
-                const buttonGroup = document.createElement('div');
-                buttonGroup.className = 'button-group';
-
-                buttonGroup.appendChild(meaningButton);
-
                 const copyButton = document.createElement('button');
                 copyButton.className = 'copy-btn';
                 copyButton.textContent = 'Copy';
-                copyButton.addEventListener('click', function () {
+                copyButton.addEventListener('click', () => {
                     navigator.clipboard.writeText(commandText).then(() => {
-                        alert('Command copied to clipboard!');
-                    }).catch(err => {
-                        alert('Failed to copy: ' + err);
+                        alertBox.style.display = 'block';
+                        setTimeout(() => {
+                            alertBox.style.display = 'none';
+                        }, 2000);
                     });
                 });
 
-                buttonGroup.appendChild(copyButton);
-
-                const descriptionDiv = document.createElement('div');
-                descriptionDiv.className = 'description';
-                descriptionDiv.textContent = commandObj.description;
-                descriptionDiv.style.display = 'none';
-
-                commandItem.appendChild(buttonGroup);
-                commandItem.appendChild(descriptionDiv);
+                commandItem.appendChild(copyButton);
                 commandList.appendChild(commandItem);
             });
 
             commandList.style.display = 'block';
+        }
+
+        function nextProblem() {
+            const problemSelect = document.getElementById('problem');
+            const currentIndex = problemSelect.selectedIndex;
+
+            if (currentIndex === problemSelect.options.length - 1) {
+                alert('次の問題はありません。現在の問題が最終問題でした');
+                return;
+            }
+
+            problemSelect.selectedIndex = currentIndex + 1;
+            generateCommands('next');
+        }
+
+        document.getElementById('create').addEventListener('click', () => generateCommands('create'));
+        document.getElementById('test').addEventListener('click', () => generateCommands('test'));
+        document.getElementById('git').addEventListener('click', () => {
+            commitContainer.style.display = 'block';
+            generateCommands('git');
         });
+        document.getElementById('commitSubmit').addEventListener('click', () => generateCommands('git'));
+        document.getElementById('next').addEventListener('click', nextProblem);
     </script>
 </body>
 </html>
