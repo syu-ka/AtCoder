@@ -193,16 +193,24 @@
 
             commandList.innerHTML = '';
 
-            const commandArray = commands[type].map(commandObj => {
+            let commandArray = commands[type].map(commandObj => {
                 return commandObj.text
                     .replace('{contest}', contest)
                     .replace('{problem}', problem);
             });
 
-            const allCommands = commandArray.join(' && ');
-
             allCopyButton.style.display = 'block';
             allCopyButton.onclick = () => {
+                let allCommands = commandArray.join(' && ');
+                if (allCommands.includes('{commitMessage}')) {
+                    const commitInput = document.getElementsByClassName('commit-input');
+
+                    const commitMessage = commitInput[0].value.trim();
+                
+                    allCommands = allCommands.replace('{commitMessage}', commitMessage);
+                            
+                }
+        
                 navigator.clipboard.writeText(allCommands).then(() => {
                     alertBox.style.display = 'block';
                     setTimeout(() => {
@@ -211,9 +219,12 @@
                 });
             };
 
+            
+
             commandArray.forEach(commandText => {
                 const commandItem = document.createElement('div');
                 commandItem.className = 'command-item';
+
 
                 if (commandText.includes('{commitMessage}')) {
                     const preText = 'git commit -m "';
@@ -241,6 +252,7 @@
                         });
                     });
 
+
                     const commandDisplay = document.createElement('div');
                     commandDisplay.className = 'command-text';
                     commandDisplay.textContent = preText;
@@ -248,6 +260,7 @@
                     commandItem.appendChild(commitInput);
                     commandItem.appendChild(document.createTextNode(postText));
                     commandItem.appendChild(copyButton);
+
                 } else {
                     const commandPre = document.createElement('pre');
                     commandPre.className = 'command-text';
@@ -265,12 +278,15 @@
                         });
                     });
 
+
                     commandItem.appendChild(commandPre);
                     commandItem.appendChild(copyButton);
                 }
 
+
                 commandList.appendChild(commandItem);
             });
+
 
             commandList.style.display = 'block';
         }
