@@ -1,0 +1,13 @@
+いい感じです。今から新しい指示を出すので、新しい指示に関係する所以外は変更を加えないでください。「Create New」や「Text&submit」「Git」「Next Problem」のボタンを押したらその分類のコマンドがすべてコピーされるようにしてください。また、コマンドの間には「 && 」を入れるようにしてください。例えば、「Create New」を押したときは「acc new {contest} && cd {contest}/{problem} && code main.js」をクリップボードにコピーするようにしてください。
+
+コミットメッセージのスタイル（HTML）
+<div class="command-item"><div class="command-item-container" style="
+"><div class="command-text">git commit -m "</div><input type="text" placeholder="Enter commit message" class="commit-input">"</div><button class="copy-btn">Copy</button></div>
+
+コミットメッセージのスタイル（CSS）さらなる調整必要
+.command-item-container {
+    display: flex;
+    align-items: center;
+}
+
+VSC起動時のカレントディレクトリがどこか確認

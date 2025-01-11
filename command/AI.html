@@ -64,6 +64,12 @@
         button#next {
             background-color: #17a2b8;
         }
+        button#all-copy {
+            background-color: #6c757d;
+            color: #fff;
+            margin-top: 10px;
+            width: 100%;
+        }
         .command-list {
             margin-top: 20px;
         }
@@ -89,6 +95,10 @@
             font-size: 14px;
             padding: 0;
             color: #333;
+        }
+        input.commit-input {
+            width: 50%;
+            margin: 4px;
         }
         .copy-btn {
             padding: 5px 10px;
@@ -135,6 +145,7 @@
             <button id="git">Git</button>
             <button id="next">Next Problem</button>
         </div>
+        <button id="all-copy" style="display: none;">All Copy</button>
         <div class="command-list" id="commandList" style="display: none;"></div>
         <div class="alert" id="alert">Copied to clipboard!</div>
     </div>
@@ -142,6 +153,7 @@
     <script>
         const commands = {
             create: [
+                { text: 'cd AtCoder' },
                 { text: 'acc new {contest}' },
                 { text: 'cd {contest}/{problem}' },
                 { text: 'code main.js' },
@@ -168,6 +180,7 @@
 
         const commandList = document.getElementById('commandList');
         const alertBox = document.getElementById('alert');
+        const allCopyButton = document.getElementById('all-copy');
 
         function generateCommands(type) {
             const contest = document.getElementById('contest').value.trim();
@@ -180,13 +193,27 @@
 
             commandList.innerHTML = '';
 
-            commands[type].forEach(commandObj => {
-                const commandItem = document.createElement('div');
-                commandItem.className = 'command-item';
-
-                let commandText = commandObj.text
+            const commandArray = commands[type].map(commandObj => {
+                return commandObj.text
                     .replace('{contest}', contest)
                     .replace('{problem}', problem);
+            });
+
+            const allCommands = commandArray.join(' && ');
+
+            allCopyButton.style.display = 'block';
+            allCopyButton.onclick = () => {
+                navigator.clipboard.writeText(allCommands).then(() => {
+                    alertBox.style.display = 'block';
+                    setTimeout(() => {
+                        alertBox.style.display = 'none';
+                    }, 2000);
+                });
+            };
+
+            commandArray.forEach(commandText => {
+                const commandItem = document.createElement('div');
+                commandItem.className = 'command-item';
 
                 if (commandText.includes('{commitMessage}')) {
                     const preText = 'git commit -m "';
