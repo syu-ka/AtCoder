@@ -183,6 +183,16 @@
         const allCopyButton = document.getElementById('all-copy');
 
         function generateCommands(type) {
+            if(type=="next"){
+                const problem = document.getElementById('problem');
+                const currentIndex = problem.selectedIndex;
+                if(currentIndex === problem.options.length - 1){
+                    problem.selectedIndex = 0;
+                    alert("現在の問題が最終問題でした。最初の問題に戻ります");
+                    return;
+                }
+                problem.selectedIndex = currentIndex + 1;
+            }
             const contest = document.getElementById('contest').value.trim();
             const problem = document.getElementById('problem').value.trim();
 
