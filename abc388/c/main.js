@@ -6,8 +6,8 @@ function Main(input) {
 
     // 2分探索法のための変数.
     let key; // 下の餅になり得る最小値. つまり 上の餅の２倍の重さ.
-    let searchLeft = 0;
-    let searchRight = A.length - 1;
+    let left = 0;
+    let right = A.length - 1;
     let half;
 
     for (let i = 0; i < N; i++) { //上の餅の重さがA[i].
@@ -19,22 +19,22 @@ function Main(input) {
             break;
         }
 
-        searchLeft = 0;
-        searchRight = A.length - 1;
+        left = 0;
+        right = A.length - 1;
 
         // 2文探索法で探す.
-        while (searchLeft < searchRight) {
-            half = Math.floor((searchRight + searchLeft) / 2);
+        while (left < right) {
+            half = Math.floor((right + left) / 2);
 
             if (key <= A[half]) {
-                searchRight = half;
+                right = half;
             } else if (key > A[half]) {
-                searchLeft = half + 1;
+                left = half + 1;
             }
         }
 
-        // A[searchLeft]以降の餅は鏡餅になり得るためカウント.
-        count += A.length - searchLeft;
+        // A[left]以降の餅は鏡餅になり得るためカウント.
+        count += A.length - left;
     }
     console.log(count);
 }
