@@ -1,20 +1,16 @@
 function Main(input) {
     const N = Number(input[0]);
     const A = input[1].split(" ").map(Number);
-    let count = 0;
-    let isTrue = true;
-    while (isTrue) {
-        for (let i = 0; i < N; i++) {
-            if (A[i] % 2 !== 0) {
-                isTrue = false;
-                break;
-            }
+    let count = [];
+    for (let i = 0; i < N; i++) {
+        count.push(0);
+        while (A[i] % 2 == 0) {
             A[i] /= 2;
+            count[i]++;
         }
-        if (isTrue) count++;
-
     }
-    console.log(count);
+
+    console.log(Math.min(...count));
 }
 
 Main(require("fs").readFileSync("/dev/stdin", "utf8").split("\n"));
