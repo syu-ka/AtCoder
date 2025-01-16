@@ -52,20 +52,20 @@
             cursor: pointer;
         }
         button#create {
-            background-color: #007bff;
+            background-color: #264653;
         }
         button#test {
-            background-color: #28a745;
+            background-color: #2a9d8f;
         }
         button#git {
-            background-color: #ffc107;
-            color: #333;
+            background-color: #e9c46a;
         }
         button#next {
-            background-color: #17a2b8;
+            background-color: #f4a261;
         }
         button#all-copy {
             background-color: #6c757d;
+            background-color: #e76f51;
             color: #fff;
             margin-top: 10px;
             width: 100%;
@@ -85,8 +85,15 @@
         }
         .command-text {
             font-family: monospace;
-            flex: 1;
+            flex: 2;
             margin-right: 10px;
+        }
+        #addFileSelect{
+            width: 50%;
+            background: transparent;
+            font-family: monospace;
+            font-size: 14px;
+            color: #333;
         }
         .commit-input {
             border: none;
@@ -103,7 +110,8 @@
         .copy-btn {
             padding: 5px 10px;
             font-size: 14px;
-            background-color: #007bff;
+            /* background-color: #6c757d; */
+            background-color: #e76f51;
             color: white;
             border: none;
             border-radius: 4px;
@@ -145,8 +153,8 @@
             <button id="git">Git</button>
             <button id="next">Next Problem</button>
         </div>
-        <button id="all-copy" style="display: none;">All Copy</button>
         <div class="command-list" id="commandList" style="display: none;"></div>
+        <button id="all-copy" style="display: none;">All Copy</button>
         <div class="alert" id="alert">Copied to clipboard!</div>
     </div>
 
@@ -166,7 +174,7 @@
             git: [
                 { text: 'cd ../../' },
                 { text: 'git status' },
-                { text: 'git add .' },
+                { text: 'git add {addFile}' },
                 { text: 'git commit -m "{commitMessage}"' },
                 { text: 'git push origin main' },
                 { text: 'cd {contest}/{problem}' },
@@ -212,6 +220,17 @@
             allCopyButton.style.display = 'block';
             allCopyButton.onclick = () => {
                 let allCommands = commandArray.join(' && ');
+
+                //addFileの処理.
+                if(allCommands.includes('{addFile}')){
+                    const addFileSelect = document.getElementById('addFileSelect');
+
+                    const addFile = addFileSelect.value;
+
+                    allCommands = allCommands.replace('{addFile}',addFile);
+                }
+
+                //commitMessageの処理.
                 if (allCommands.includes('{commitMessage}')) {
                     const commitInput = document.getElementsByClassName('commit-input');
 
@@ -235,8 +254,44 @@
                 const commandItem = document.createElement('div');
                 commandItem.className = 'command-item';
 
+                if(commandText.includes('{addFile}')){
+                    const preText = 'git add ';
+                    const addFileSelect = document.createElement('select');
+                    addFileSelect.id = 'addFileSelect';
+                    const addFileOption1 = document.createElement('option');
+                    const addFileOption2 = document.createElement('option');
 
-                if (commandText.includes('{commitMessage}')) {
+                    addFileOption1.value = `${contest}/${problem}`;
+                    addFileOption1.text = `${contest}/${problem}`;
+                    addFileOption2.value = ".";
+                    addFileOption2.text = ".";
+
+                    addFileSelect.add(addFileOption1);
+                    addFileSelect.add(addFileOption2);
+
+                    const addFile = addFileSelect.value;
+
+                    const copyButton = document.createElement('button');
+                    copyButton.className = 'copy-btn';
+                    copyButton.textContent = 'Copy';
+                    copyButton.addEventListener('click', () => {
+                        const addFile = addFileSelect.value;
+                        const finalCommand = `${preText}${addFile}`;
+                        navigator.clipboard.writeText(finalCommand).then(() => {
+                            alertBox.style.display = 'block';
+                            setTimeout(() => {
+                                alertBox.style.display = 'none';
+                            }, 2000);
+                        });
+                    });
+
+                    const commandDisplay = document.createElement('div');
+                    commandDisplay.className = 'command-text';
+                    commandDisplay.textContent = preText;
+                    commandItem.appendChild(commandDisplay);
+                    commandItem.appendChild(copyButton);
+                    commandDisplay.appendChild(addFileSelect);
+                }else if (commandText.includes('{commitMessage}')) {
                     const preText = 'git commit -m "';
                     const postText = '"';
                     const commitInput = document.createElement('input');
@@ -267,9 +322,9 @@
                     commandDisplay.className = 'command-text';
                     commandDisplay.textContent = preText;
                     commandItem.appendChild(commandDisplay);
-                    commandItem.appendChild(commitInput);
-                    commandItem.appendChild(document.createTextNode(postText));
                     commandItem.appendChild(copyButton);
+                    commandDisplay.appendChild(commitInput);
+                    commandDisplay.appendChild(document.createTextNode(postText));
 
                 } else {
                     const commandPre = document.createElement('pre');
