@@ -51,6 +51,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            margin: 0 6px;
         }
         button#create {
             background-color: #264653;
@@ -111,7 +112,6 @@
         .copy-btn {
             padding: 5px 10px;
             font-size: 14px;
-            /* background-color: #6c757d; */
             background-color: #e76f51;
             color: white;
             border: none;
@@ -218,6 +218,18 @@
                     .replace('{problem}', problem);
             });
 
+            //デフォルト値をクリップボードにコピー.
+            let allCommands = commandArray.join(' && ');
+            navigator.clipboard.writeText(allCommands).then(() => {
+                    alertBox.textContent = 'Copy default values to clipboard';
+                    alertBox.style.display = 'block';
+                    setTimeout(() => {
+                        alertBox.style.display = 'none';
+                        alertBox.textContent = 'Copied to clipboard!';
+                    }, 2000);
+            });
+        
+
             allCopyButton.style.display = 'block';
             allCopyButton.onclick = () => {
                 let allCommands = commandArray.join(' && ');
@@ -242,9 +254,11 @@
                 }
         
                 navigator.clipboard.writeText(allCommands).then(() => {
+                    alertBox.textContent = 'Copy current value to clipboard';
                     alertBox.style.display = 'block';
                     setTimeout(() => {
                         alertBox.style.display = 'none';
+                        alertBox.textContent = 'Copied to clipboard!';
                     }, 2000);
                 });
             };
@@ -279,6 +293,7 @@
                         const addFile = addFileSelect.value;
                         const finalCommand = `${preText}${addFile}`;
                         navigator.clipboard.writeText(finalCommand).then(() => {
+                            alertBox.textContent = 'Copy current value to clipboard';
                             alertBox.style.display = 'block';
                             setTimeout(() => {
                                 alertBox.style.display = 'none';
@@ -312,6 +327,7 @@
                         }
                         const finalCommand = `${preText}${commitMessage}${postText}`;
                         navigator.clipboard.writeText(finalCommand).then(() => {
+                            alertBox.textContent = 'Copy current value to clipboard';
                             alertBox.style.display = 'block';
                             setTimeout(() => {
                                 alertBox.style.display = 'none';
@@ -338,6 +354,7 @@
                     copyButton.textContent = 'Copy';
                     copyButton.addEventListener('click', () => {
                         navigator.clipboard.writeText(commandText).then(() => {
+                            alertBox.textContent = 'Copy current value to clipboard';
                             alertBox.style.display = 'block';
                             setTimeout(() => {
                                 alertBox.style.display = 'none';
