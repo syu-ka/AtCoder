@@ -115,9 +115,9 @@
 
                 //commitMessageの処理.
                 if (allCommands.includes('{commitMessage}')) {
-                    const commitInput = document.getElementsByClassName('commit-input');
+                    const commitInput = document.getElementById('commit-input');
 
-                    const commitMessage = commitInput[0].value.trim();
+                    const commitMessage = commitInput.value.trim();
                 
                     allCommands = allCommands.replace('{commitMessage}', commitMessage);
                             
@@ -183,7 +183,7 @@
                     const commitInput = document.createElement('input');
                     commitInput.type = 'text';
                     commitInput.placeholder = 'Enter commit message';
-                    commitInput.className = 'commit-input';
+                    commitInput.id = 'commit-input';
                     if(type=="create"){
                     commitInput.value = 'new file';
                     }else{
@@ -261,9 +261,9 @@
 
                     //commitMessageの処理.
                     if (allCommands.includes('{commitMessage}')) {
-                        const commitInput = document.getElementsByClassName('commit-input');
+                        const commitInput = document.getElementById('commit-input');
 
-                        const commitMessage = commitInput[0].value.trim();
+                        const commitMessage = commitInput.value.trim();
                     
                         allCommands = allCommands.replace('{commitMessage}', commitMessage);
                                 

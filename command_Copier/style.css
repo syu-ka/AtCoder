@@ -83,24 +83,20 @@ button#all-copy {
     flex: 2;
     margin-right: 10px;
 }
+#addFileSelect,#commit-input{
+    padding: 8px;
+    margin: 0 4px;
+    background: transparent;
+    font-family: monospace;
+    font-size: 14px;
+    color: #333;
+}
 #addFileSelect{
-    width: 50%;
-    background: transparent;
-    font-family: monospace;
-    font-size: 14px;
-    color: #333;
+    width: 40%;
 }
-.commit-input {
-    border: none;
-    background: transparent;
-    font-family: monospace;
-    font-size: 14px;
-    padding: 0;
-    color: #333;
-}
-input.commit-input {
-    width: 50%;
-    margin: 4px;
+
+input#commit-input {
+    width: 60%;
 }
 .copy-btn {
     padding: 5px 10px;
