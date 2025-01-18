@@ -19,13 +19,11 @@ function Main(input) {
             kind3count++;
             let upToDetail = [...snakeQueue];
             // console.log("あ" + upToDetail);
-            upToDetail.splice(detail[i] - 1, upToDetail.length - 1);
-            const sum = upToDetail.reduce((a, b) => a + b,);
+
+            const sum = upToDetail.splice(0, detail[i] - 1).reduce((a, b) => a + b,);
             // console.log("あ" + upToDetail);
             // console.log(snakeQueue);
             console.log(sum);
-        } else {
-            console.log("エラー");
         }
         // console.log(`i=${i}の時snakeQueue=${snakeQueue}`);
     }
