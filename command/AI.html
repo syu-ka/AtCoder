@@ -164,6 +164,9 @@
             create: [
                 { text: 'cd AtCoder' },
                 { text: 'acc new {contest}' },
+                { text: 'git add .' },
+                { text: 'git commit -m "{commitMessage}"' },
+                { text: 'git push origin main' },
                 { text: 'cd {contest}/{problem}' },
                 { text: 'code main.js' },
             ],
@@ -217,17 +220,7 @@
                     .replace('{contest}', contest)
                     .replace('{problem}', problem);
             });
-
-            //デフォルト値をクリップボードにコピー.
-            let allCommands = commandArray.join(' && ');
-            navigator.clipboard.writeText(allCommands).then(() => {
-                    alertBox.textContent = 'Copy default values to clipboard';
-                    alertBox.style.display = 'block';
-                    setTimeout(() => {
-                        alertBox.style.display = 'none';
-                        alertBox.textContent = 'Copied to clipboard!';
-                    }, 2000);
-            });
+            
         
 
             allCopyButton.style.display = 'block';
@@ -314,7 +307,11 @@
                     commitInput.type = 'text';
                     commitInput.placeholder = 'Enter commit message';
                     commitInput.className = 'commit-input';
+                    if(type=="create"){
+                    commitInput.value = 'new file';
+                    }else{
                     commitInput.value = '初AC';
+                    }
 
                     const copyButton = document.createElement('button');
                     copyButton.className = 'copy-btn';
@@ -371,8 +368,38 @@
                 commandList.appendChild(commandItem);
             });
 
-
             commandList.style.display = 'block';
+
+            //デフォルト値をクリップボードにコピー.
+            const defaultCopy = (function(){
+                let allCommands = commandArray.join(' && ');
+                //addFileの処理.
+                if(allCommands.includes('{addFile}')){
+                        const addFileSelect = document.getElementById('addFileSelect');
+
+                        const addFile = addFileSelect.value;
+
+                        allCommands = allCommands.replace('{addFile}',addFile);
+                    }
+
+                    //commitMessageの処理.
+                    if (allCommands.includes('{commitMessage}')) {
+                        const commitInput = document.getElementsByClassName('commit-input');
+
+                        const commitMessage = commitInput[0].value.trim();
+                    
+                        allCommands = allCommands.replace('{commitMessage}', commitMessage);
+                                
+                    }
+                navigator.clipboard.writeText(allCommands).then(() => {
+                        alertBox.textContent = 'Copy default values to clipboard';
+                        alertBox.style.display = 'block';
+                        setTimeout(() => {
+                            alertBox.style.display = 'none';
+                            alertBox.textContent = 'Copied to clipboard!';
+                        }, 2000);
+                });
+            }());
         }
 
         document.getElementById('create').addEventListener('click', () => generateCommands('create'));
