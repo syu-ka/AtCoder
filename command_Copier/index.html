@@ -94,6 +94,23 @@
             return allCommands;
         }
 
+        function Copy(copyText,kind){
+            const alertText = {
+                'dA':()=> 'default values',
+                'cA':()=> 'current value',
+                'cS':()=> 'a single line',
+            };
+
+            navigator.clipboard.writeText(copyText).then(() => {
+                        alertBox.textContent = `Copy ${alertText[kind]()} to clipboard`;
+                        alertBox.style.display = 'block';
+                        setTimeout(() => {
+                            alertBox.style.display = 'none';
+                            alertBox.textContent = 'Copied to clipboard!';
+                        }, 2000);
+                });
+        }
+
         
 
         function generateCommands(type) {
@@ -131,15 +148,7 @@
 
                 allCommands = getReplacement(allCommands);
 
-        
-                navigator.clipboard.writeText(allCommands).then(() => {
-                    alertBox.textContent = 'Copy current value to clipboard';
-                    alertBox.style.display = 'block';
-                    setTimeout(() => {
-                        alertBox.style.display = 'none';
-                        alertBox.textContent = 'Copied to clipboard!';
-                    }, 2000);
-                });
+                Copy(allCommands,'cA');
             };
 
             
@@ -171,13 +180,7 @@
                     copyButton.addEventListener('click', () => {
                         const addFile = addFileSelect.value;
                         const finalCommand = `${preText}${addFile}`;
-                        navigator.clipboard.writeText(finalCommand).then(() => {
-                            alertBox.textContent = 'Copy current value to clipboard';
-                            alertBox.style.display = 'block';
-                            setTimeout(() => {
-                                alertBox.style.display = 'none';
-                            }, 2000);
-                        });
+                        Copy(finalCommand,'cS');
                     });
 
                     const commandDisplay = document.createElement('div');
@@ -209,13 +212,7 @@
                             return;
                         }
                         const finalCommand = `${preText}${commitMessage}${postText}`;
-                        navigator.clipboard.writeText(finalCommand).then(() => {
-                            alertBox.textContent = 'Copy current value to clipboard';
-                            alertBox.style.display = 'block';
-                            setTimeout(() => {
-                                alertBox.style.display = 'none';
-                            }, 2000);
-                        });
+                        Copy(finalCommand,'cS');
                     });
 
 
@@ -236,13 +233,7 @@
                     copyButton.className = 'copy-btn';
                     copyButton.textContent = 'Copy';
                     copyButton.addEventListener('click', () => {
-                        navigator.clipboard.writeText(commandText).then(() => {
-                            alertBox.textContent = 'Copy current value to clipboard';
-                            alertBox.style.display = 'block';
-                            setTimeout(() => {
-                                alertBox.style.display = 'none';
-                            }, 2000);
-                        });
+                        Copy(commandText,'cS');
                     });
 
 
@@ -262,38 +253,10 @@
 
                 allCommands = getReplacement(allCommands);
 
-                navigator.clipboard.writeText(allCommands).then(() => {
-                        alertBox.textContent = 'Copy default values to clipboard';
-                        alertBox.style.display = 'block';
-                        setTimeout(() => {
-                            alertBox.style.display = 'none';
-                            alertBox.textContent = 'Copied to clipboard!';
-                        }, 2000);
-                });
+                Copy(allCommands,'dA');
             }());
         }
 
-        // function getReplacement(allCommands){
-        //     //addFileを取得、置き換え.
-        //     if(allCommands.includes('{addFile}')){
-        //             const addFileSelect = document.getElementById('addFileSelect');
-
-        //             const addFile = addFileSelect.value;
-
-        //             allCommands = allCommands.replace('{addFile}',addFile);
-        //         }
-            
-        //     //commitMessageの処理.
-        //     if (allCommands.includes('{commitMessage}')) {
-        //         const commitInput = document.getElementById('commit-input');
-
-        //         const commitMessage = commitInput.value.trim();
-            
-        //         allCommands = allCommands.replace('{commitMessage}', commitMessage);
-                        
-        //     }
-        //     return allCommands;
-        // }
 
         document.getElementById('create').addEventListener('click', () => generateCommands('create'));
         document.getElementById('test').addEventListener('click', () => generateCommands('test'));
