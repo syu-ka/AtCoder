@@ -71,6 +71,31 @@
         const alertBox = document.getElementById('alert');
         const allCopyButton = document.getElementById('all-copy');
 
+        //addFileとcommitMessageを取得、置き換え.
+        function getReplacement(allCommands){
+            //addFileの処理.
+            if(allCommands.includes('{addFile}')){
+                    const addFileSelect = document.getElementById('addFileSelect');
+
+                    const addFile = addFileSelect.value;
+
+                    allCommands = allCommands.replace('{addFile}',addFile);
+                }
+            
+            //commitMessageの処理.
+            if (allCommands.includes('{commitMessage}')) {
+                const commitInput = document.getElementById('commit-input');
+
+                const commitMessage = commitInput.value.trim();
+            
+                allCommands = allCommands.replace('{commitMessage}', commitMessage);
+                        
+            }
+            return allCommands;
+        }
+
+        
+
         function generateCommands(type) {
             if(type=="next"){
                 const problem = document.getElementById('problem');
@@ -104,24 +129,8 @@
             allCopyButton.onclick = () => {
                 let allCommands = commandArray.join(' && ');
 
-                //addFileの処理.
-                if(allCommands.includes('{addFile}')){
-                    const addFileSelect = document.getElementById('addFileSelect');
+                allCommands = getReplacement(allCommands);
 
-                    const addFile = addFileSelect.value;
-
-                    allCommands = allCommands.replace('{addFile}',addFile);
-                }
-
-                //commitMessageの処理.
-                if (allCommands.includes('{commitMessage}')) {
-                    const commitInput = document.getElementById('commit-input');
-
-                    const commitMessage = commitInput.value.trim();
-                
-                    allCommands = allCommands.replace('{commitMessage}', commitMessage);
-                            
-                }
         
                 navigator.clipboard.writeText(allCommands).then(() => {
                     alertBox.textContent = 'Copy current value to clipboard';
@@ -250,24 +259,9 @@
             //デフォルト値をクリップボードにコピー.
             const defaultCopy = (function(){
                 let allCommands = commandArray.join(' && ');
-                //addFileの処理.
-                if(allCommands.includes('{addFile}')){
-                        const addFileSelect = document.getElementById('addFileSelect');
 
-                        const addFile = addFileSelect.value;
+                allCommands = getReplacement(allCommands);
 
-                        allCommands = allCommands.replace('{addFile}',addFile);
-                    }
-
-                    //commitMessageの処理.
-                    if (allCommands.includes('{commitMessage}')) {
-                        const commitInput = document.getElementById('commit-input');
-
-                        const commitMessage = commitInput.value.trim();
-                    
-                        allCommands = allCommands.replace('{commitMessage}', commitMessage);
-                                
-                    }
                 navigator.clipboard.writeText(allCommands).then(() => {
                         alertBox.textContent = 'Copy default values to clipboard';
                         alertBox.style.display = 'block';
@@ -278,6 +272,28 @@
                 });
             }());
         }
+
+        // function getReplacement(allCommands){
+        //     //addFileを取得、置き換え.
+        //     if(allCommands.includes('{addFile}')){
+        //             const addFileSelect = document.getElementById('addFileSelect');
+
+        //             const addFile = addFileSelect.value;
+
+        //             allCommands = allCommands.replace('{addFile}',addFile);
+        //         }
+            
+        //     //commitMessageの処理.
+        //     if (allCommands.includes('{commitMessage}')) {
+        //         const commitInput = document.getElementById('commit-input');
+
+        //         const commitMessage = commitInput.value.trim();
+            
+        //         allCommands = allCommands.replace('{commitMessage}', commitMessage);
+                        
+        //     }
+        //     return allCommands;
+        // }
 
         document.getElementById('create').addEventListener('click', () => generateCommands('create'));
         document.getElementById('test').addEventListener('click', () => generateCommands('test'));
