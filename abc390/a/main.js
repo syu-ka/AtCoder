@@ -1,17 +1,12 @@
 function Main(input) {
-    const As = input[0].split(" ").map(Number);
-    const AsSource = [1, 2, 3, 4, 5];
-    let canAO = false;
-    let count = 0;
+    const A = input[0].split(" ").map(Number);
+    const ASource = [1, 2, 3, 4, 5];
+    let canAO = false; //昇順(AscendingOrder)できるか.
     for (let i = 0; i < 4; i++) {
-        let AsSwap = As.slice(); //AsSwapを変更してもAsに影響がでないようにsliceで渡す.
-        AsSwap[i] = As[i + 1];
-        AsSwap[i + 1] = As[i];
-        if (AsSwap.join("") == AsSource.join("")) {
-            canAO = true;
-            break;
-        }
+        let ASwap = A.slice(); //ASwapを変更してもAに影響がでないようにsliceで渡す.
+        [ASwap[i], ASwap[i + 1]] = [ASwap[i + 1], ASwap[i]]; //隣り合う項を一か所だけ入れ替える.
 
+        if (ASwap.join("") == ASource.join("")) canAO = true;
     }
     canAO ? console.log("Yes") : console.log("No");
 
