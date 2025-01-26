@@ -1,14 +1,14 @@
 function Main(input) {
     const N = Number(input[0]);
-    const A = input[1].split(" ").map(Number);
-    const commonRatio = A[1] / A[0]; //公比.
-    let isGeometricProgression = true; //等比数列か.
-    for (let i = 1; i < A.length; i++) {
-        if (A[i] !== A[i - 1] * commonRatio) {
-            isGeometricProgression = false;
-        }
+    const A = input[1].split(" ").map(BigInt);
+    let isGP = true; //等比数列(GeometricProgression)か.
+
+    for (let i = 0; i < (N - 2); i++) {
+        // 等比中項でなければ、等比数列ではない.
+        if (A[i] * A[i + 2] != A[i + 1] * A[i + 1]) isGP = false;
     }
-    isGeometricProgression ? console.log("Yes") : console.log("No");
+
+    isGP ? console.log("Yes") : console.log("No");
 
 }
 
