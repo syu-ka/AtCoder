@@ -35,6 +35,7 @@ function Main(input) {
         if (iMax[n] == -1) {
             for (let t = 0; t < N; t++) {
                 console.log("U " + n);
+                console.log("D " + n);
             }
         } else {
 
@@ -54,12 +55,12 @@ function Main(input) {
                 // console.log(t);
                 console.log("D " + n);
             }
-            if (iMin[n] != iMax[n]) {
-                // 下移動した分を上移動して元に戻す.
-                for (let t = N - 1; t > iMax[n]; t--) {
-                    console.log("U " + n);
-                }
+            // if (iMin[n] != iMax[n]) {
+            // 下移動した分を上移動して元に戻す.
+            for (let t = N - 1; t > iMax[n]; t--) {
+                console.log("U " + n);
             }
+            // }
         }
 
     }
