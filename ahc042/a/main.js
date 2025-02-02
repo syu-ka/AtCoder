@@ -29,12 +29,25 @@ function Main(input) {
 
     // 上・下 移動.
     for (let n = 0; n < N; n++) {
+        // console.log(`n = ${n}`);
+
+        // 上移動して鬼を取り除く.
         for (let t = 0; t < iMin[n]; t++) {
-            console.log("U " + t);
+            console.log("U " + n);
         }
+        // 上移動した分を下移動して元に戻す.
+        for (let t = 0; t < iMin[n]; t++) {
+            console.log("D " + n);
+        }
+
+        // 下移動して鬼を取り除く.
         for (let t = N - 1; t > iMax[n]; t--) {
-            console.log("D " + t);
+            console.log("D " + n);
         }
+        // // 下移動した分を上移動して元に戻す.
+        // for (let t = N - 1; t > iMax[n]; t--) {
+        //     console.log("U " + n);
+        // }
     }
 
 
@@ -50,12 +63,17 @@ function Main(input) {
 
     // 左・右 移動.
     for (let n = 0; n < N; n++) {
-        for (let t = 0; t < jMin[n]; t++) {
-            console.log("L " + t);
-        }
-        for (let t = N - 1; t > jMax[n]; t--) {
-            console.log("R " + t);
-        }
+        // // 左移動して鬼を取り除く.
+        // for (let t = 0; t < jMin[n]; t++) {
+        //     console.log("L " + t);
+        // }
+        // // 左移動した分を右移動して元に戻す.
+        // for (let t = 0; t < jMin[n]; t++) {
+        //     console.log("R " + t);
+        // }
+        // for (let t = N - 1; t > jMax[n]; t--) {
+        //     console.log("R " + t);
+        // }
     }
 }
 
