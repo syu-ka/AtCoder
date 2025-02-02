@@ -81,13 +81,14 @@ function Main(input) {
         for (let t = 0; t < jMin[n]; t++) {
             console.log("L " + n);
         }
-        // // 左移動した分を右移動して元に戻す.
-        // for (let t = 0; t < jMin[n]; t++) {
-        //     console.log("R " + n);
-        // }
-        // for (let t = N - 1; t > jMax[n]; t--) {
-        //     console.log("R " + n);
-        // }
+        // 左移動した分を右移動して元に戻す.
+        for (let t = 0; t < jMin[n]; t++) {
+            console.log("R " + n);
+        }
+        // 右移動して鬼を取り除く.
+        for (let t = N - 1; t > jMax[n]; t--) {
+            console.log("R " + n);
+        }
     }
 }
 
