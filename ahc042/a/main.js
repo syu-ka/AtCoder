@@ -1,20 +1,17 @@
 function Main(input) {
     const N = Number(input[0]);
     let C = [];
-    let canRemove = true;
     let iMin = []; //iMin[3] = 2; は 3列目の(2-1)行目まではoが無い.
     let iMax = []; //iMax[12] = 17; は 12列目の(17+1)行以降(17+1行含む)はoが無い.
     let jMin = []; //jMin[3] = 2; は　3行目の(2-1)列目まではoが無い.
     let jMax = [];
-    let temp;
+
     for (let i = 0; i < N; i++) {
         C.push(input[i + 1].split(""));
         iMin.push(N);
         iMax.push(-1);
         jMin.push(N);
         jMax.push(-1);
-        // console.log("あ");
-        // console.log(iMin[0]);
     }
 
     // 福(o)が居る最小行、最大行を求める.
@@ -78,17 +75,25 @@ function Main(input) {
 
     // 左・右 移動.
     for (let n = 0; n < N; n++) {
-        // 左移動して鬼を取り除く.
-        for (let t = 0; t < jMin[n]; t++) {
-            console.log("L " + n);
-        }
-        // 左移動した分を右移動して元に戻す.
-        for (let t = 0; t < jMin[n]; t++) {
-            console.log("R " + n);
-        }
-        // 右移動して鬼を取り除く.
-        for (let t = N - 1; t > jMax[n]; t--) {
-            console.log("R " + n);
+
+        if (jMax[n] == -1) {
+            for (let t = 0; t < N; t++) {
+                console.log("L " + n);
+                // console.log("D " + n);
+            }
+        } else {
+            // 左移動して鬼を取り除く.
+            for (let t = 0; t < jMin[n]; t++) {
+                console.log("L " + n);
+            }
+            // 左移動した分を右移動して元に戻す.
+            for (let t = 0; t < jMin[n]; t++) {
+                console.log("R " + n);
+            }
+            // 右移動して鬼を取り除く.
+            for (let t = N - 1; t > jMax[n]; t--) {
+                console.log("R " + n);
+            }
         }
     }
 }
