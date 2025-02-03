@@ -32,6 +32,8 @@ function Main(input) {
         if (iMax[n] == -1) {
             for (let t = 0; t < N; t++) {
                 console.log("U " + n);
+            }
+            for (let t = 0; t < N; t++) {
                 console.log("D " + n);
             }
         } else {
