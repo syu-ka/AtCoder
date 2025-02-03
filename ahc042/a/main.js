@@ -33,9 +33,6 @@ function Main(input) {
             for (let t = 0; t < N; t++) {
                 console.log("U " + n);
             }
-            for (let t = 0; t < N; t++) {
-                console.log("D " + n);
-            }
         } else {
 
             // 上移動して鬼を取り除く.
