@@ -38,16 +38,11 @@ function Main(input) {
                     if (C[n][j] == "o") isUnderFuku = true;
                 }
 
-                // if (!isLeftFuku && !isRightFuku) {
-                //     for (let n = 0; n <= N; n++) {
-                //         console.log("L " + i);
-                //     }
-                // } else if (!isAboveFuku && !isUnderFuku) {
-                //     for (let n = 0; n <= N; n++) {
-                //         console.log("U " + j);
-                //     }
-                // } else 
-                if (!isLeftFuku) {
+                if (!isLeftFuku && !isRightFuku) {
+                    for (let n = 0; n <= N; n++) {
+                        console.log("L " + i);
+                    }
+                } else if (!isLeftFuku) {
 
                     for (let n = 0; n <= j; n++) {
                         console.log("L " + i);
