@@ -39,10 +39,16 @@ function Main(input) {
                 }
 
                 if (!isLeftFuku && !isRightFuku) {
-                    for (let n = 0; n <= N; n++) {
+                    for (let n = 0; n <= j; n++) {
                         console.log("L " + i);
                     }
-                } else if (!isLeftFuku) {
+                }
+                // else if (!isAboveFuku && !isUnderFuku) {
+                //     for (let n = 0; n <= N; n++) {
+                //         console.log("U " + i);
+                //     }
+                // }
+                else if (!isLeftFuku) {
 
                     for (let n = 0; n <= j; n++) {
                         console.log("L " + i);
