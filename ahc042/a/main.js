@@ -10,7 +10,7 @@ function Main(input) {
         C.push(input[i + 1].split(""));
     }
 
-    // 鬼(x)か求める.
+    // 鬼(x)の座標を求めて上下左右どこに福が居ないかを求める.
     for (let i = 0; i < N; i++) {
         for (let j = 0; j < N; j++) {
             if (C[i][j] == "x") {
@@ -31,14 +31,16 @@ function Main(input) {
                     if (C[n][j] == "o") isUnderFuku = true;
                 }
 
-                if (!isLeftFuku) {
-                    for (let n = 0; n <= j; n++) {
-                        console.log("L " + i);
-                    }
-                    for (let n = 0; n <= j; n++) {
-                        console.log("R " + i);
-                    }
-                } else if (!isRightFuku) {
+                // if (!isLeftFuku && !isRightFuku) {
+                //     for (let n = 0; n <= N; n++) {
+                //         console.log("L " + i);
+                //     }
+                // } else if (!isAboveFuku && !isUnderFuku) {
+                //     for (let n = 0; n <= N; n++) {
+                //         console.log("U " + j);
+                //     }
+                // } else 
+                if (!isRightFuku) {
                     for (let n = j; n < N; n++) {
                         console.log("R " + i);
                     }
@@ -46,6 +48,16 @@ function Main(input) {
                         console.log("L " + i);
                     }
 
+                    // 現在の行の現在のマスより左に鬼はもういないので.この行の最後のマス(一番右)までとばす.
+                    j = N;
+
+                } else if (!isLeftFuku) {
+                    for (let n = 0; n <= j; n++) {
+                        console.log("L " + i);
+                    }
+                    for (let n = 0; n <= j; n++) {
+                        console.log("R " + i);
+                    }
                 } else if (!isAboveFuku) {
                     for (let n = 0; n <= i; n++) {
                         console.log("U " + j);
