@@ -43,11 +43,6 @@ function Main(input) {
                         console.log("L " + i);
                     }
                 }
-                // else if (!isAboveFuku && !isUnderFuku) {
-                //     for (let n = 0; n <= N; n++) {
-                //         console.log("U " + i);
-                //     }
-                // }
                 else if (!isLeftFuku) {
 
                     for (let n = 0; n <= j; n++) {
@@ -67,6 +62,11 @@ function Main(input) {
 
                     // 現在の行の現在のマスより左に鬼はもういないので.この行の最後のマス(一番右)までとばす.
                     j = N;
+
+                } else if (!isAboveFuku && !isUnderFuku) {
+                    for (let n = i; n < N; n++) {
+                        console.log("D " + j);
+                    }
                 } else if (!isAboveFuku) {
                     for (let n = 0; n <= i; n++) {
                         console.log("U " + j);
