@@ -25,7 +25,14 @@ function Main(input) {
                     if (C[n][j] == "o") isAboveFuku = true;
                 }
                 for (let n = j; n < N; n++) {
-                    if (C[i][n] == "o") isRightFuku = true;
+                    //現在のマスより右に鬼が居たら同時に押し出すために、右に鬼を見つけたら探索位置を右の鬼の位置に変更する.
+                    if (!isLeftFuku && C[i][n] == "x") {
+                        j = n;
+                    }
+                    if (C[i][n] == "o") {
+                        isRightFuku = true;
+                        break;
+                    }
                 }
                 for (let n = i; n < N; n++) {
                     if (C[n][j] == "o") isUnderFuku = true;
@@ -40,7 +47,16 @@ function Main(input) {
                 //         console.log("U " + j);
                 //     }
                 // } else 
-                if (!isRightFuku) {
+                if (!isLeftFuku) {
+
+                    for (let n = 0; n <= j; n++) {
+                        console.log("L " + i);
+                    }
+                    for (let n = 0; n <= j; n++) {
+                        console.log("R " + i);
+                    }
+
+                } else if (!isRightFuku) {
                     for (let n = j; n < N; n++) {
                         console.log("R " + i);
                     }
@@ -50,14 +66,6 @@ function Main(input) {
 
                     // 現在の行の現在のマスより左に鬼はもういないので.この行の最後のマス(一番右)までとばす.
                     j = N;
-
-                } else if (!isLeftFuku) {
-                    for (let n = 0; n <= j; n++) {
-                        console.log("L " + i);
-                    }
-                    for (let n = 0; n <= j; n++) {
-                        console.log("R " + i);
-                    }
                 } else if (!isAboveFuku) {
                     for (let n = 0; n <= i; n++) {
                         console.log("U " + j);
