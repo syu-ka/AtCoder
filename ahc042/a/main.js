@@ -1,170 +1,77 @@
 function Main(input) {
     const N = Number(input[0]);
     let C = [];
-    let iMin = []; //iMin[3] = 2; は 3列目の(2-1)行目まではoが無い.
-    let iMax = []; //iMax[12] = 17; は 12列目の(17+1)行以降(17+1行含む)はoが無い.
-    let jMin = []; //jMin[3] = 2; は　3行目の(2-1)列目まではoが無い.
-    let jMax = [];
-    let isPresentOni = false; //鬼が居るか.
+    let isAboveFuku = false; //福が上に居るか.
+    let isUnderFuku = false; //福が下に居るか.
+    let isLeftFuku = false; //福が左に居るか.
+    let isRightFuku = false; //福が右に居るか.
 
     for (let i = 0; i < N; i++) {
         C.push(input[i + 1].split(""));
-        iMin.push(N);
-        iMax.push(-1);
-        jMin.push(N);
-        jMax.push(-1);
     }
 
-    // 福(o)が居る最小行、最大行を求める.
+    // 鬼(x)か求める.
     for (let i = 0; i < N; i++) {
         for (let j = 0; j < N; j++) {
-            if (C[i][j] == "o") {
-                iMin[j] = Math.min(iMin[j], i);
-                iMax[j] = Math.max(iMax[j], i);
-            }
-        }
-    }
+            if (C[i][j] == "x") {
+                isAboveFuku = false;
+                isUnderFuku = false;
+                isLeftFuku = false;
+                isRightFuku = false;
+                for (let n = 0; n < j; n++) {
+                    if (C[i][n] == "o") isLeftFuku = true;
+                }
+                for (let n = 0; n < i; n++) {
+                    if (C[n][j] == "o") isAboveFuku = true;
+                }
+                for (let n = j; n < N; n++) {
+                    if (C[i][n] == "o") isRightFuku = true;
+                }
+                for (let n = i; n < N; n++) {
+                    if (C[n][j] == "o") isUnderFuku = true;
+                }
 
-    // 上・下 移動.
-    for (let n = 0; n < N; n++) {
+                if (!isLeftFuku) {
+                    for (let n = 0; n <= j; n++) {
+                        console.log("L " + i);
+                    }
+                    for (let n = 0; n <= j; n++) {
+                        console.log("R " + i);
+                    }
+                } else if (!isRightFuku) {
+                    for (let n = j; n < N; n++) {
+                        console.log("R " + i);
+                    }
+                    for (let n = j; n < N; n++) {
+                        console.log("L " + i);
+                    }
 
-        isPresentOni = false;
-        for (let m = 0; m < N; m++) {
-            if (C[m][n] == "x") isPresentOni = true;
-        }
-
-        if (isPresentOni) {
-            if (iMin[n] <= N - 1 - iMax[n]) {
-                if (iMax[n] == -1) {
-                    for (let t = 0; t < N; t++) {
-                        console.log("U " + n);
+                } else if (!isAboveFuku) {
+                    for (let n = 0; n <= i; n++) {
+                        console.log("U " + j);
+                    }
+                    for (let n = 0; n <= i; n++) {
+                        console.log("D " + j);
+                    }
+                } else if (!isUnderFuku) {
+                    for (let n = i; n < N; n++) {
+                        console.log("D " + j);
+                    }
+                    for (let n = i; n < N; n++) {
+                        console.log("U " + j);
                     }
                 } else {
-
-                    // 上移動して鬼を取り除く.
-                    for (let t = 0; t < iMin[n]; t++) {
-                        // console.log(t);
-                        console.log("U " + n);
-                    }
-                    // 上移動した分を下移動して元に戻す.
-                    for (let t = 0; t < iMin[n]; t++) {
-                        // console.log(t);
-                        console.log("D " + n);
-                    }
-
-                    // 下移動して鬼を取り除く.
-                    for (let t = N - 1; t > iMax[n]; t--) {
-                        // console.log(t);
-                        console.log("D " + n);
-                    }
-                    // 下移動した分を上移動して元に戻す.
-                    for (let t = N - 1; t > iMax[n]; t--) {
-                        console.log("U " + n);
-                    }
+                    // console.log("すべてに当てはまらない");
                 }
-
-            } else {
-
-                if (iMax[n] == -1) {
-                    for (let t = 0; t < N; t++) {
-                        console.log("D " + n);
-                    }
-                } else {
-
-                    // 下移動して鬼を取り除く.
-                    for (let t = N - 1; t > iMax[n]; t--) {
-                        // console.log(t);
-                        console.log("D " + n);
-                    }
-                    // 下移動した分を上移動して元に戻す.
-                    for (let t = N - 1; t > iMax[n]; t--) {
-                        console.log("U " + n);
-                    }
-
-                    // 上移動して鬼を取り除く.
-                    for (let t = 0; t < iMin[n]; t++) {
-                        // console.log(t);
-                        console.log("U " + n);
-                    }
-                    // 上移動した分を下移動して元に戻す.
-                    for (let t = 0; t < iMin[n]; t++) {
-                        // console.log(t);
-                        console.log("D " + n);
-                    }
-
-                }
-
-            }
-        }
-
-    }
-
-
-    // 福(o)が居る最小列、最大列を求める.
-    for (let j = 0; j < N; j++) {
-        for (let i = 0; i < N; i++) {
-            if (C[i][j] == "o") {
-                jMin[i] = Math.min(jMin[i], j);
-                jMax[i] = Math.max(jMax[i], j);
             }
         }
     }
 
-    // 左・右 移動.
-    for (let n = 0; n < N; n++) {
 
-        if (jMin[n] <= N - 1 - jMax[n]) {
-            if (jMax[n] == -1) {
-                for (let t = 0; t < N; t++) {
-                    console.log("L " + n);
-                    // console.log("D " + n);
-                }
-            } else {
-                // 左移動して鬼を取り除く.
-                for (let t = 0; t < jMin[n]; t++) {
-                    console.log("L " + n);
-                }
-                // 左移動した分を右移動して元に戻す.
-                for (let t = 0; t < jMin[n]; t++) {
-                    console.log("R " + n);
-                }
-                // 右移動して鬼を取り除く.
-                for (let t = N - 1; t > jMax[n]; t--) {
-                    console.log("R " + n);
-                }
-            }
-
-        } else {
-
-            if (jMax[n] == -1) {
-                for (let t = 0; t < N; t++) {
-                    console.log("R " + n);
-                }
-            } else {
-
-                // 右移動して鬼を取り除く.
-                for (let t = N - 1; t > jMax[n]; t--) {
-                    console.log("R " + n);
-                }
-                // 右移動した分を左移動して元に戻す.
-                for (let t = N - 1; t > jMax[n]; t--) {
-                    console.log("L " + n);
-                }
-
-                // 左移動して鬼を取り除く.
-                for (let t = 0; t < jMin[n]; t++) {
-                    console.log("L " + n);
-                }
-                // // 左移動した分を右移動して元に戻す.
-                // for (let t = 0; t < jMin[n]; t++) {
-                //     console.log("R " + n);
-                // }
-            }
-
-        }
-
-
-    }
 }
+
+
+
+
 
 Main(require("fs").readFileSync("/dev/stdin", "utf8").split("\n"));
