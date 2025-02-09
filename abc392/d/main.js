@@ -18,36 +18,20 @@ function Main(input) {
     for (let i = 0; i < N; i++) {   //1つ目のサイコロ.
         for (let j = 0; j < N; j++) {   // 2つ目のサイコロ.
             if (i < j) {
-                // サイコロiとサイコロjの出目が等しくなるには、どちらのサイコロにも存在する面（出目）である必要があるため.
-                let tempSet = new Set(A[i]);
-                // tempSet = tempSet.intersection(new Set(A[j]));
-                tempSet = intersection(tempSet, new Set(A[j]));
-                let tempSetKey = tempSet.keys();
-                // console.log(tempSet);
-                let tempPip = [];
                 let tempP = 0; //サイコロiとサイコロjの出目が等しくなる確率.
-                for (let k = 0; k < tempSet.size; k++) {
-                    tempPip.push(tempSetKey.next().value);
-                    tempP += (pipCount[i][tempPip[k]] / K[i]) * pipCount[j][tempPip[k]] / K[j]; //出目がtempPip[k]で同じになる確率.
-                }
+                for (elem in pipCount[i]) {
 
+                    let tempP_i = pipCount[i][elem] / K[i]; //サイコロiの出目がelemになる確率.
+                    let tempP_j = (pipCount[j][elem] == undefined ? 0 : pipCount[j][elem] / K[j]); //サイコロjの出目がelemになる確率.
+
+                    tempP += tempP_i * tempP_j; //出目がelemで同じになる確率.
+                }
                 maxProbability = Math.max(maxProbability, tempP);
             }
         }
     }
 
     console.log(maxProbability);
-    // console.log(Math.round(maxProbability * (10 ** 15)) / (10 ** 15));
-}
-
-function intersection(setA, setB) {
-    let _intersection = new Set();
-    for (let elem of setB) {
-        if (setA.has(elem)) {
-            _intersection.add(elem);
-        }
-    }
-    return _intersection;
 }
 
 Main(require("fs").readFileSync("/dev/stdin", "utf8").split("\n"));
