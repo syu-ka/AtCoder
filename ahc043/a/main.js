@@ -13,9 +13,14 @@ function Main(input) {
     let j_s = []; // j列目 にある 家.
     let i_t = []; // i行目 にある 職場.
     let j_t = []; // j列目 にある 職場.
+
+    let distance_st = []; // distance[c]は人cの 家sと職場t の最短距離(最短マス数).
     for (let i = 0; i < M; i++) {
         [i_s[i], j_s[i], i_t[i], j_t[i]] = input[i + 1].split(" ").map(Number);
         // console.log(i_s[m], j_s[m], i_t[m], j_t[m]);
+
+        distance_st.push(distance(i_s[i], i_t[i]) + distance(j_s[i], j_t[i]));
+        // console.log(distance_st[i]);
     }
 
     /* 出力操作 */
@@ -23,6 +28,10 @@ function Main(input) {
         console.log(-1);
     }
 
+}
+
+function distance(i, j) {
+    return Math.abs(i - j);
 }
 
 Main(require("fs").readFileSync("/dev/stdin", "utf8").split("\n"));
