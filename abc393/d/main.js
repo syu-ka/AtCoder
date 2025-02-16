@@ -25,7 +25,7 @@ function Main(input) {
             count += (N - 1 - i) - center - 1;
         }
 
-        if (Math.floor(N / 2) <= i && !(isLeft1 && isRigth1)) {
+        if (Math.ceil(N / 2) - 1 <= i && !(isLeft1 && isRigth1)) {
             // console.log("あ");
             break;
         }
