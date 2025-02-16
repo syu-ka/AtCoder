@@ -8,23 +8,25 @@ function Main(input) {
 
     let isLeft1 = false;  //左に1があるか.
     let isRigth1 = false;  //右に1があるか.
-    let mostLeft1;
-    let mostRight1;
-    let center;
+    let mostLeft1; //一番左にある1の要素番号.
+    let mostRight1; //一番右にある1の要素番号.
+    let center; // mostLeft1とmostRight1のちょうど真ん中の要素番号.
+    // let count1 = 0; // 1がいくつあったか.
     for (let i = 0; i < N; i++) {
         if (S[i] == 1 && !isLeft1) {
             isLeft1 = true;
             mostLeft1 = i;
-        } else if (S[i] == 1 && isLeft1 && center > i) {
-            count += center - i - 1;
+        } else if (S[i] == 1 && isLeft1 && center[0] > i) {
+            count += (center[0] - 1) - i;
         }
         if (S[N - 1 - i] == 1 && !isRigth1) {
             isRigth1 = true;
             mostRight1 = N - 1 - i;
-        } else if (S[N - 1 - i] == 1 && isRigth1 && center < N - 1 - i) {
-            count += (N - 1 - i) - center - 1;
+        } else if (S[N - 1 - i] == 1 && isRigth1 && center[1] < N - 1 - i) {
+            count += (N - 1 - i) - (center[1] + 1);
         }
 
+        // これ以上みると探索位置が重複するため終了.
         if (Math.ceil(N / 2) - 1 <= i && !(isLeft1 && isRigth1)) {
             // console.log("あ");
             break;
@@ -32,16 +34,69 @@ function Main(input) {
         // console.log(`Math.floor(N / 2)=${Math.floor(N / 2)}`);
 
 
+        // center がどこか決める.
         if (center == undefined && mostLeft1 != undefined && mostRight1 != undefined) {
-            center = (mostRight1 - mostLeft1) % 2 == 0 ? (mostRight1 - mostLeft1) / 2 : (mostRight1 - mostLeft1 + 1) / 2;
-            // console.log(center);
-            count += center - mostLeft1 - 1;
-            // console.log(`center - mostLeft1 - 1 = ${center - mostLeft1 - 1}`);
-            count += mostRight1 - center - 1;
-            // console.log(`mostRight1 - center-1 = ${mostRight1 - center - 1}`);
+            let tempCenter = ((mostRight1 - mostLeft1) / 2) + mostLeft1;
+            if ((mostRight1 - mostLeft1) % 2 == 0) {
+
+                center = [tempCenter, tempCenter];
+                // console.log(`center=${center}`);
+
+
+                if (S[center[0]] == 0 && S[center[1]] == 0) {
+                    count += center[0] - mostLeft1;
+                    if (S[center[1] + 1] == 0) {
+                        count += mostRight1 - (center[1] + 1);
+                        center[1]++;
+                    } else {
+                        count += mostRight1 - (center[1] + 2);
+                        center[1] += 2;
+                    }
+                } else {
+                    count += (center[0] - 1) - mostLeft1;
+                    center[0]--;
+                    if (S[center[1] + 1] == 0) {
+                        count += mostRight1 - (center[1] + 1);
+                        center[1]++;
+                    } else {
+                        count += mostRight1 - (center[1] + 2);
+                        center[1] += 2;
+                    }
+                }
+
+                // console.log(`center=${center}`);
+            } else {
+
+                center = [Math.floor(tempCenter), Math.ceil(tempCenter)];
+                // console.log(`center=${center}`);
+
+                if (S[center[0]] == 0) {
+                    count += center[0] - mostLeft1;
+                    if (S[center[1]] == 0) {
+                        count += mostRight1 - center[1];
+                    } else {
+                        count += mostRight1 - (center[1] + 1);
+                        center[1]++;
+                    }
+                } else {
+                    count += (center[0] - 1) - mostLeft1;
+                    center[0]--;
+                    if (S[center[1]] == 0) {
+                        count += mostRight1 - center[1];
+                    } else {
+                        count += mostRight1 - (center[1] + 1);
+                        center[1]++;
+                    }
+                }
+
+                // console.log(`center=${center}`);
+            }
+
         }
 
-        if (i > center && N - 1 - i < center) break;
+        if (center != undefined) {
+            if (i > center[0] && N - 1 - i < center[1]) break;
+        }
     }
 
     console.log(count);
