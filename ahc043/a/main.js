@@ -40,8 +40,8 @@ class UnionFind {
     unite(p, q) {
         const pIdx = p.row * this.n + p.col;
         const qIdx = q.row * this.n + q.col;
-        const pRoot = this._findRoot(pIdx);
-        const qRoot = this._findRoot(qIdx);
+        let pRoot = this._findRoot(pIdx);
+        let qRoot = this._findRoot(qIdx);
         if (pRoot !== qRoot) {
             const pSize = -this.parents[pRoot];
             const qSize = -this.parents[qRoot];
