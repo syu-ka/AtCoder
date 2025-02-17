@@ -1,72 +1,281 @@
-function Main(input) {
+const Pos = class {
+    constructor(row, col) {
+        this.row = row;
+        this.col = col;
+    }
+};
 
-    /* 入力操作 */
-    const [N, M, K, T] = input[0].split(" ").map(Number);
-    // N は区画の縦・横の数で、N=50.
-    // M はR国の人の数で、50≤M≤1600.
-    // K は鉄道会社Xの初期資金であり、11000≤K≤20000.
-    // T はゲームのターン数であり、T=800.
+const EMPTY = -1;
+const DO_NOTHING = -1;
+const STATION = 0;
+const RAIL_HORIZONTAL = 1;
+const RAIL_VERTICAL = 2;
+const RAIL_LEFT_DOWN = 3;
+const RAIL_LEFT_UP = 4;
+const RAIL_RIGHT_UP = 5;
+const RAIL_RIGHT_DOWN = 6;
+const COST_STATION = 5000;
+const COST_RAIL = 100;
 
-    // console.log(N, M, K, T);
-
-    let i_s = []; // i行目 にある 家. indexが住人番号.
-    let j_s = []; // j列目 にある 家.
-    let i_t = []; // i行目 にある 職場.
-    let j_t = []; // j列目 にある 職場.
-
-    let distance_st = []; // distance[c]は人cの 家sと職場t の最短距離(最短マス数).
-    for (let i = 0; i < M; i++) {
-        [i_s[i], j_s[i], i_t[i], j_t[i]] = input[i + 1].split(" ").map(Number);
-        // console.log(i_s[m], j_s[m], i_t[m], j_t[m]);
-
-        distance_st.push(distance(i_s[i], i_t[i]) + distance(j_s[i], j_t[i]));
-        // console.log(distance_st[i]);
-
-
+class UnionFind {
+    constructor(n) {
+        this.n = n;
+        this.parents = new Array(n * n).fill(-1);
     }
 
-    let dist_st_desc = getOriginalIndices(distance_st); // dist_st_desc[2]はdistanceの要素を昇順に並べて2番目に大きい要素の番号.//作成理由：distanceが大きいと収益(鉄道利用料金)も大きくなるため.
-    // console.log(`dist_st_desc[2].index=${dist_st_desc[2].index}`);
-    console.log(`dist_st_desc[0]=${dist_st_desc[0]}`);
-    console.log(`distance_st[${dist_st_desc[0]}]=${distance_st[dist_st_desc[0]]}`);
-    console.log(dist_st_desc);
+    _findRoot(idx) {
+        if (this.parents[idx] < 0) {
+            return idx;
+        }
+        this.parents[idx] = this._findRoot(this.parents[idx]);
+        return this.parents[idx];
+    }
 
+    isSame(p, q) {
+        const pIdx = p.row * this.n + p.col;
+        const qIdx = q.row * this.n + q.col;
+        return this._findRoot(pIdx) === this._findRoot(qIdx);
+    }
 
-    /* 出力操作 */
-    let inConstruction = false;
-    for (let i = 0; i < T; i++) {
-        if (i == 0) { //【注意】後でもう既に駅が置かれてしまっていないかなどのチェックを入れる.
-            //【注意】距離が長いため一つ目の線路を繋げる前に資金が尽きてしまう可能性を考える.
-            inConstruction = true;
-            console.log(0, i_s[dist_st_desc[0]], j_s[dist_st_desc[0]]);//【注意】後で要素数が0以外の場合も考える.その時に存在しない要素にアクセスしないように気を付ける.
-            i++;
-            console.log(0, i_t[dist_st_desc[0]], j_t[dist_st_desc[0]]);//【注意】後で要素数が0以外の場合も考える.その時に存在しない要素にアクセスしないように気を付ける.
-            // i++;
+    unite(p, q) {
+        const pIdx = p.row * this.n + p.col;
+        const qIdx = q.row * this.n + q.col;
+        const pRoot = this._findRoot(pIdx);
+        const qRoot = this._findRoot(qIdx);
+        if (pRoot !== qRoot) {
+            const pSize = -this.parents[pRoot];
+            const qSize = -this.parents[qRoot];
+            if (pSize > qSize) {
+                [pRoot, qRoot] = [qRoot, pRoot];
+            }
+            this.parents[qRoot] += this.parents[pRoot];
+            this.parents[pRoot] = qRoot;
+        }
+    }
+}
 
-            inConstruction = false;
+function distance(a, b) {
+    return Math.abs(a.row - b.row) + Math.abs(a.col - b.col);
+}
+
+class Action {
+    constructor(type, pos) {
+        this.type = type;
+        this.pos = pos;
+    }
+
+    toString() {
+        if (this.type === DO_NOTHING) {
+            return "-1";
         } else {
-            console.log(-1);
+            return `${this.type} ${this.pos.row} ${this.pos.col}`;
+        }
+    }
+}
+
+class Result {
+    constructor(actions, score) {
+        this.actions = actions;
+        this.score = score;
+    }
+
+    toString() {
+        return this.actions.map(action => action.toString()).join("\n");
+    }
+}
+
+class Field {
+    constructor(N) {
+        this.N = N;
+        this.rail = Array.from({ length: N }, () => new Array(N).fill(EMPTY));
+        this.uf = new UnionFind(N);
+    }
+
+    build(type, r, c) {
+        console.assert(this.rail[r][c] !== STATION);
+        if (1 <= type && type <= 6) {
+            console.assert(this.rail[r][c] === EMPTY);
+        }
+        this.rail[r][c] = type;
+
+        // 隣接する区画と接続
+        // 上
+        if ([STATION, RAIL_VERTICAL, RAIL_LEFT_UP, RAIL_RIGHT_UP].includes(type)) {
+            if (r > 0 && [STATION, RAIL_VERTICAL, RAIL_LEFT_DOWN, RAIL_RIGHT_DOWN].includes(this.rail[r - 1][c])) {
+                this.uf.unite(new Pos(r, c), new Pos(r - 1, c));
+            }
+        }
+        // 下
+        if ([STATION, RAIL_VERTICAL, RAIL_LEFT_DOWN, RAIL_RIGHT_DOWN].includes(type)) {
+            if (r < this.N - 1 && [STATION, RAIL_VERTICAL, RAIL_LEFT_UP, RAIL_RIGHT_UP].includes(this.rail[r + 1][c])) {
+                this.uf.unite(new Pos(r, c), new Pos(r + 1, c));
+            }
+        }
+        // 左
+        if ([STATION, RAIL_HORIZONTAL, RAIL_LEFT_DOWN, RAIL_LEFT_UP].includes(type)) {
+            if (c > 0 && [STATION, RAIL_HORIZONTAL, RAIL_RIGHT_DOWN, RAIL_RIGHT_UP].includes(this.rail[r][c - 1])) {
+                this.uf.unite(new Pos(r, c), new Pos(r, c - 1));
+            }
+        }
+        // 右
+        if ([STATION, RAIL_HORIZONTAL, RAIL_RIGHT_DOWN, RAIL_RIGHT_UP].includes(type)) {
+            if (c < this.N - 1 && [STATION, RAIL_HORIZONTAL, RAIL_LEFT_DOWN, RAIL_LEFT_UP].includes(this.rail[r][c + 1])) {
+                this.uf.unite(new Pos(r, c), new Pos(r, c + 1));
+            }
+        }
+    }
+
+    isConnected(s, t) {
+        console.assert(distance(s, t) > 4);  // 前提条件
+        const stations0 = this.collectStations(s);
+        const stations1 = this.collectStations(t);
+        for (let station0 of stations0) {
+            for (let station1 of stations1) {
+                if (this.uf.isSame(station0, station1)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    collectStations(pos) {
+        const stations = [];
+        for (let dr of [-2, -1, 0, 1, 2]) {
+            for (let dc of [-2, -1, 0, 1, 2]) {
+                if (Math.abs(dr) + Math.abs(dc) > 2) {
+                    continue;
+                }
+                const r = pos.row + dr;
+                const c = pos.col + dc;
+                if (0 <= r && r < this.N && 0 <= c && c < this.N && this.rail[r][c] === STATION) {
+                    stations.push(new Pos(r, c));
+                }
+            }
+        }
+        return stations;
+    }
+}
+
+class Solver {
+    constructor(N, M, K, T, home, workplace) {
+        this.N = N;
+        this.M = M;
+        this.K = K;
+        this.T = T;
+        this.home = home;
+        this.workplace = workplace;
+        this.field = new Field(N);
+        this.money = K;
+        this.actions = [];
+    }
+
+    calcIncome() {
+        let income = 0;
+        for (let i = 0; i < this.M; i++) {
+            if (this.field.isConnected(this.home[i], this.workplace[i])) {
+                income += distance(this.home[i], this.workplace[i]);
+            }
+        }
+        return income;
+    }
+
+    buildRail(type, r, c) {
+        this.field.build(type, r, c);
+        this.money -= COST_RAIL;
+        this.actions.push(new Action(type, new Pos(r, c)));
+    }
+
+    buildStation(r, c) {
+        this.field.build(STATION, r, c);
+        this.money -= COST_STATION;
+        this.actions.push(new Action(STATION, new Pos(r, c)));
+    }
+
+    buildNothing() {
+        this.actions.push(new Action(DO_NOTHING, new Pos(0, 0)));
+    }
+
+    solve() {
+        // 接続する人を見つける
+        const railCount = Math.floor((this.K - COST_STATION * 2) / COST_RAIL);
+        let personIdx = 0;
+        while (personIdx < this.M) {
+            if (distance(this.home[personIdx], this.workplace[personIdx]) - 1 <= railCount) {
+                break;
+            }
+            personIdx++;
+        }
+        console.assert(personIdx !== this.M);
+
+        // 駅の配置
+        this.buildStation(this.home[personIdx].row, this.home[personIdx].col);
+        this.buildStation(this.workplace[personIdx].row, this.workplace[personIdx].col);
+
+        // 線路を配置して駅を接続する
+        const r0 = this.home[personIdx].row;
+        const c0 = this.home[personIdx].col;
+        const r1 = this.workplace[personIdx].row;
+        const c1 = this.workplace[personIdx].col;
+        // r0 -> r1
+        if (r0 < r1) {
+            for (let r = r0 + 1; r < r1; r++) {
+                this.buildRail(RAIL_VERTICAL, r, c0);
+            }
+            if (c0 < c1) {
+                this.buildRail(RAIL_RIGHT_UP, r1, c0);
+            } else if (c0 > c1) {
+                this.buildRail(RAIL_LEFT_UP, r1, c0);
+            }
+        } else if (r0 > r1) {
+            for (let r = r0 - 1; r > r1; r--) {
+                this.buildRail(RAIL_VERTICAL, r, c0);
+            }
+            if (c0 < c1) {
+                this.buildRail(RAIL_RIGHT_DOWN, r1, c0);
+            } else if (c0 > c1) {
+                this.buildRail(RAIL_LEFT_DOWN, r1, c0);
+            }
+        }
+        // c0 -> c1
+        if (c0 < c1) {
+            for (let c = c0 + 1; c < c1; c++) {
+                this.buildRail(RAIL_HORIZONTAL, r1, c);
+            }
+        } else if (c0 > c1) {
+            for (let c = c0 - 1; c > c1; c--) {
+                this.buildRail(RAIL_HORIZONTAL, r1, c);
+            }
         }
 
+        const income = this.calcIncome();
+        this.money += income;
+
+        // あとは待機
+        while (this.actions.length < this.T) {
+            this.buildNothing();
+            this.money += income;
+        }
+
+        return new Result(this.actions, this.money);
     }
 }
 
-// dist_st_desc や 通勤で利用するか駅まで(distance()<=2)の条件の確認 で使用するために作製.
-function distance(i, j) {
-    return Math.abs(i - j);
+function main() {
+    const input = require("fs").readFileSync("/dev/stdin", "utf8").split("\n");
+    const [N, M, K, T] = input[0].trim().split(" ").map(Number);
+    const home = [];
+    const workplace = [];
+    for (let i = 1; i <= M; i++) {
+        const [r0, c0, r1, c1] = input[i].trim().split(" ").map(Number);
+        home.push(new Pos(r0, c0));
+        workplace.push(new Pos(r1, c1));
+    }
+
+    const solver = new Solver(N, M, K, T, home, workplace);
+    const result = solver.solve();
+    console.log(result.toString());
+    console.error(`score=${result.score}`);
 }
 
-function getOriginalIndices(before) {
-    // 配列 a を複製し、それぞれの要素に元のインデックスを追加.
-    let indexedArray = before.map((value, index) => ({ value, index }));
-
-    // 値に基づいて配列を降順にソート.
-    indexedArray.sort((a, b) => b.value - a.value);
-
-    // ソート後の配列から元のインデックスだけを抽出.
-    let after = indexedArray.map((object) => object.index);
-
-    return after;
-}
-
-Main(require("fs").readFileSync("/dev/stdin", "utf8").split("\n"));
+main();

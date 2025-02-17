@@ -11,19 +11,34 @@ function Main(input) {
     let mostLeft1; //一番左にある1の要素番号.
     let mostRight1; //一番右にある1の要素番号.
     let center; // mostLeft1とmostRight1のちょうど真ん中の要素番号.
-    // let count1 = 0; // 1がいくつあったか.
+    let countL1 = 0; // centerより左に1がいくつあったか.
+    let countR1 = 0; // centerより右に1がいくつあったか.
     for (let i = 0; i < N; i++) {
         if (S[i] == 1 && !isLeft1) {
             isLeft1 = true;
-            mostLeft1 = i;
-        } else if (S[i] == 1 && isLeft1 && center[0] > i) {
-            count += (center[0] - 1) - i;
+            countL1++;
+            mostLeft1 = [i];
+        } else if (S[i] == 1 && isLeft1 && center[0] >= i) {
+            if (isRigth1) {
+                count += (center[0] - 1) - (i + countL1);
+                countL1++;
+            } else {
+                mostLeft1.push(i);
+                countL1++;
+            }
         }
         if (S[N - 1 - i] == 1 && !isRigth1) {
             isRigth1 = true;
-            mostRight1 = N - 1 - i;
-        } else if (S[N - 1 - i] == 1 && isRigth1 && center[1] < N - 1 - i) {
-            count += (N - 1 - i) - (center[1] + 1);
+            countR1++;
+            mostRight1 = [N - 1 - i];
+        } else if (S[N - 1 - i] == 1 && isRigth1 && center[1] <= N - 1 - i) {
+            if (isLeft1) {
+                count += (N - 1 - i + countR1) - (center[1] + 1);
+                countR1++;
+            } else {
+                mostRight1.push(N - 1 - i);
+                countR1++;
+            }
         }
 
         // これ以上みると探索位置が重複するため終了.
@@ -36,33 +51,34 @@ function Main(input) {
 
         // center がどこか決める.
         if (center == undefined && mostLeft1 != undefined && mostRight1 != undefined) {
-            let tempCenter = ((mostRight1 - mostLeft1) / 2) + mostLeft1;
-            if ((mostRight1 - mostLeft1) % 2 == 0) {
+            let tempCenter = ((mostRight1[0] - mostLeft1[0]) / 2) + mostLeft1[0];
+            if ((mostRight1[0] - mostLeft1[0]) % 2 == 0) {
 
                 center = [tempCenter, tempCenter];
                 // console.log(`center=${center}`);
 
 
                 if (S[center[0]] == 0 && S[center[1]] == 0) {
-                    count += center[0] - mostLeft1;
-                    if (S[center[1] + 1] == 0) {
-                        count += mostRight1 - (center[1] + 1);
-                        center[1]++;
-                    } else {
-                        count += mostRight1 - (center[1] + 2);
-                        center[1] += 2;
-                    }
-                } else {
-                    count += (center[0] - 1) - mostLeft1;
-                    center[0]--;
-                    if (S[center[1] + 1] == 0) {
-                        count += mostRight1 - (center[1] + 1);
-                        center[1]++;
-                    } else {
-                        count += mostRight1 - (center[1] + 2);
-                        center[1] += 2;
-                    }
+                    count += center[0] - mostLeft1[0];
+                    // if (S[center[1] + 1] == 0) {
+                    //     count += mostRight1 - (center[1] + 1);
+                    //     center[1]++;
+                    // } else {
+                    //     count += mostRight1 - (center[1] + 2);
+                    //     center[1] += 2;
+                    // }
                 }
+                //  else {
+                //     count += (center[0] - 1) - mostLeft1;
+                //     center[0]--;
+                //     if (S[center[1] + 1] == 0) {
+                //         count += mostRight1 - (center[1] + 1);
+                //         center[1]++;
+                //     } else {
+                //         count += mostRight1 - (center[1] + 2);
+                //         center[1] += 2;
+                //     }
+                // }
 
                 // console.log(`center=${center}`);
             } else {
@@ -71,7 +87,7 @@ function Main(input) {
                 // console.log(`center=${center}`);
 
                 if (S[center[0]] == 0) {
-                    count += center[0] - mostLeft1;
+                    count += center[0] - mostLeft1[0];
                     if (S[center[1]] == 0) {
                         count += mostRight1 - center[1];
                     } else {
@@ -95,7 +111,7 @@ function Main(input) {
         }
 
         if (center != undefined) {
-            if (i > center[0] && N - 1 - i < center[1]) break;
+            if (center[0] <= i && N - 1 - i <= center[1]) break;
         }
     }
 
