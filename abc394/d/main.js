@@ -6,21 +6,46 @@ function Main(input) {
     if (s.length % 2 != 0) answer = "No";
 
 
+    let small_left = 0; // "("
+    let small_right = 0; // ")"
+    let medium_left = 0; // "["
+    let medium_right = 0; // "]"
+    let big_left = 0; // "<"
+    let big_right = 0; // ">"
+
+    // let count = [small_left, small_right, medium_left, medium_right, big_left, big_right];
+
     for (let i = 0; i < s.length; i++) {
 
         switch (s[i]) {
             case "(":
+                small_left++;
                 if (s[i + 1] == "]" || s[i + 1] == ">") answer = "No";
                 break;
 
-            case "[":
-                if (s[i + 1] == ")" || s[i + 1] == ">") answer = "No";
+            case ")":
+                small_right++;
+                if (small_left == 0) answer = "No";
+                break;
 
+            case "[":
+                medium_left++;
+                if (s[i + 1] == ")" || s[i + 1] == ">") answer = "No";
+                break;
+
+            case "]":
+                medium_right++;
+                if (medium_left == 0) answer = "No";
                 break;
 
             case "<":
+                big_left++;
                 if (s[i + 1] == "]" || s[i + 1] == ")") answer = "No";
+                break;
 
+            case ">":
+                big_right++;
+                if (big_left == 0) answer = "No";
                 break;
 
             default:
@@ -28,6 +53,10 @@ function Main(input) {
         }
 
     }
+
+    // 括弧の右と左が同じ数で無ければ必ずNo.
+    if (small_left != small_right || medium_left != medium_right || big_left != big_right) answer = "No";
+
 
     if (answer == "Yes") {
         console.log("Yes");
