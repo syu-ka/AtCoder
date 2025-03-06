@@ -5,8 +5,8 @@ function Main(input) {
     // q:クエリの数.
 
     let pigeon = [""];
-    // index=鳩の番号,pigeon[index]=巣の番号.
-    // pigeon[1]=2のとき鳩1が巣2にいる.
+    // index=鳩の番号,pigeon[index]=左から何番目の巣.
+    // pigeon[1]=2のとき鳩1が左から2番目の巣にいる.
 
     let nest = [""];
     //index=巣の番号,nest[index]=左から何番目.
@@ -30,39 +30,38 @@ function Main(input) {
 
         switch (op[i][0]) {
             case 1:
-                pigeon[op[i][1]] = nestOrder[op[i][2]];
+                // 鳩aは左からb番目の巣に移動.
+                pigeon[op[i][1]] = nest[op[i][2]];
                 console.log(`pigeon[${op[i][1]}]=${pigeon[op[i][1]]}`);
                 break;
 
             case 2:
-                let copy = nestOrder.slice(op[i][1], op[i][1] + 1);
-                nestOrder[op[i][1]] = nestOrder[op[i][2]];
-                nestOrder[op[i][2]] = copy;
-                console.log(`nestOrder[${op[i][1]}]=${nestOrder[op[i][1]]}`);
-                console.log(`nestOrder[${op[i][2]}]=${nestOrder[op[i][2]]}`);
+                // let copy_nestOrder = nestOrder[op[i][1]];
+                // let copy_nest = nest[op[i][1]];
+                // nestOrder[op[i][1]] = nestOrder[op[i][2]];
+                // nest[op[i][1]] = nestOrder[nest[op[i][2]]];
+                // nestOrder[op[i][2]] = copy_nestOrder;
+                // nest[op[i][2]] = copy_nest;
+                // 巣aが巣bと入れ替わる
+                // つまり"左から何番目[巣a]"が"左から何番目[巣b]"と入れ替わる.
+                let copy_nestOrder = nestOrder[op[i][1]];
+                let copy_nest = nest[op[i][1]];
+                nestOrder[nest[op[i][1]]] = nestOrder[nest[op[i][2]]];
+                nest[op[i][1]] = nest[op[i][2]];
+                nestOrder[op[i][2]] = copy_nestOrder;
+                nest[op[i][2]] = copy_nest;
+
+                // console.log(`nestOrder[${op[i][1]}]=${nestOrder[op[i][1]]}`);
+                // console.log(`nest[${op[i][1]}]=${nest[op[i][1]]}`);
+                // console.log(`nestOrder[${op[i][2]}]=${nestOrder[op[i][2]]}`);
+                // console.log(`nest[${op[i][2]}]=${nest[op[i][2]]}`);
                 break;
 
             case 3:
-                let temp = pigeon[op[i][1]];
-                let last = pigeon[op[i][1]];
-                let test = 0;
-                while (test < 5) {
-                    temp = nestOrder[temp];
-                    console.log(`temp=${temp}`);
+                console.log(`pigeon[${op[i][1]}]=${pigeon[op[i][1]]}`);
+                console.log(`nestOrder[${pigeon[op[i][1]]}]=${nestOrder[pigeon[op[i][1]]]}`);
 
-                    if (temp == op[i][1]) {
-                        break;
-                    }
-                    last = temp;
-
-                    test++;
-                }
-                console.log(last);
-
-                // console.log(`pigeon[${op[i][1]}]=${pigeon[op[i][1]]}`);
-                // console.log(`nestOrder[${pigeon[op[i][1]]}]=${nestOrder[pigeon[op[i][1]]]}`);
-                // console.log(`nestOrder[${nestOrder[pigeon[op[i][1]]]}]=${nestOrder[nestOrder[pigeon[op[i][1]]]]}`);
-                // console.log(nestOrder[pigeon[op[i][1]]]);
+                console.log(nestOrder[pigeon[op[i][1]]]);
                 break;
 
             default:

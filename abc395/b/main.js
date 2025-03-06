@@ -1,9 +1,9 @@
 function Main(input) {
     const n = Number(input[0]);
-    let s = [];
+    let s = [""];//グリットを表す文字列.sは1行目から始まるためs[0]="".
 
-    for (let i = 0; i < n; i++) {
-        s.push([...Array(n)]);
+    for (let i = 1; i <= n; i++) {
+        s.push(["", ...Array(n)]); //sは1列目から始まるためs[i][0]="".
     }
 
     let j;
@@ -20,18 +20,17 @@ function Main(input) {
         }
     }
 
-    for (let i = 0; i < n; i++) {
+    for (let i = 1; i <= n; i++) {
         console.log(s[i].join(""));
     }
 }
 
 function color_judge(color, s, i, j) {
     for (let a = i; a <= j; a++) {
-        // "-1"が美しくないので後で書き直す.
-        s[i - 1][a - 1] = color;
-        s[a - 1][i - 1] = color;
-        s[a - 1][j - 1] = color;
-        s[j - 1][a - 1] = color;
+        s[i][a] = color;
+        s[a][i] = color;
+        s[a][j] = color;
+        s[j][a] = color;
     }
 }
 
