@@ -8,10 +8,10 @@ function Main(input) {
     b.sort((a, b) => b - a);
     w.sort((a, b) => b - a);
     for (let i = 0; i < n; i++) {
-        if (b[i] + w[i] >= 0) {
+        if (b[i] >= 0) {
             valueSum += b[i];
             ballCount++;
-        } else if (b[i] >= 0) {
+        } else if (b[i] + w[i] >= 0 && i < m) {
             valueSum += b[i];
             ballCount++;
         } else {
@@ -20,7 +20,7 @@ function Main(input) {
     }
 
     for (let i = 0; i < ballCount; i++) {
-        if (w[i] < 0) {
+        if (w[i] < 0 || i >= m) {
             break;
         }
         valueSum += w[i];
