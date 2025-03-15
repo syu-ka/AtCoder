@@ -1,7 +1,6 @@
 function Main(input) {
     const s = input[0].split("");
     let count = 0;
-    const lengthTrue = s.length % 2 === 0 ? true : false;
     // console.log(length);
     for (let i = 0; i < s.length; i++) {
         if (((i + count) % 2 === 1 && s[i] === "o") || ((i + count) % 2 === 0 && s[i] === "i")) {
@@ -10,6 +9,7 @@ function Main(input) {
             // console.log(`i=${i}, count=${count}`);
         }
     }
+    const lengthTrue = (s.length + count) % 2 === 0 ? true : false;
     if (!lengthTrue) {
         count++;
     }
