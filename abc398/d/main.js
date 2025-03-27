@@ -1,36 +1,37 @@
+/* 煙を固定して、焚き火と高橋君のマス(R,C)を風に従って移動させる. */
+// そうすることで、変化する物体の数を2つに減らすことができるため、計算量を減らすことができる.
 function Main(input) {
     let answer = "";
 
     const [n, r, c] = input[0].split(" ").map(Number);
     const s = input[1].split("");
 
-    let [sR, sC] = [[0], [0]]; // 煙の初期座標.
-    for (let i = 0; i <= n; i++) {
+    let [tmpR, tmpC] = [r, c]; // 高橋君の現在の座標.
+    let [bonfireR, bonfireC] = [0, 0]; // 焚き火の座標.
+    let smokeRC = new Set(); // 煙の座標.
+    smokeRC.add(`${bonfireR},${bonfireC}`); // 初期値を追加.
+    for (let i = 0; i < n; i++) {
         if (s[i] === "N") {
-            sR.push(sR[sR.length - 1] - 1);
-            sC.push(sC[sC.length - 1]);
+            tmpR++;
+            bonfireR++;
         } else if (s[i] === "S") {
-            sR.push(sR[sR.length - 1] + 1);
-            sC.push(sC[sC.length - 1]);
+            tmpR--;
+            bonfireR--;
         } else if (s[i] === "W") {
-            sR.push(sR[sR.length - 1]);
-            sC.push(sC[sC.length - 1] - 1);
+            tmpC++;
+            bonfireC++;
         } else if (s[i] === "E") {
-            sR.push(sR[sR.length - 1]);
-            sC.push(sC[sC.length - 1] + 1);
+            tmpC--;
+            bonfireC--;
         }
 
-        if (i === 0) continue;
+        smokeRC.add(`${bonfireR},${bonfireC}`);
+        // console.log(`${bonfireR},${bonfireC}|${tmpR},${tmpC}`);
 
-        let isExist = false;
-        for (let j = 0; j < i; j++) {
-            if (r === sR[i] - sR[j] && c === sC[i] - sC[j]) {
-                answer += "1";
-                isExist = true;
-                break;
-            }
-        }
-        if (!isExist) {
+        let tmpRC = `${tmpR},${tmpC}`;
+        if (smokeRC.has(tmpRC)) {
+            answer += "1";
+        } else {
             answer += "0";
         }
     }
