@@ -2,28 +2,38 @@ function Main(input) {
     const n = Number(input[0]);
     const p = input[1].split(" ").map(Number);
 
-    const p_and_index = new Array(n);
+    // /* 要素番号を保持したまま、中身の値を基準としてソートする. */
+    // const n = 4;
+    // // n: 要素数.
+    // const p = [3, 12, 9, 9];
+    // // p: 要素の値.
+
+    // 要素番号と値を保持する配列を作成
+    const indexedValue = Array.from({ length: n }, (_, i) => ({
+        value: p[i],
+        index: i
+    }));
+
+    // 値を基準に降順ソート
+    const indexedValue_sorted = [...indexedValue].sort((a, b) => b.value - a.value);
+
+    // ランクを計算
+    let rank = 0;
     for (let i = 0; i < n; i++) {
-        p_and_index[i] = { index: i, value: p[i] };
-    }
-
-
-    const p_and_index_sorted = [...p_and_index].sort((a, b) => b.value - a.value);
-    // p_sorted: pを逆順ソートした配列.
-
-    let rank = 1;
-    for (let i = 0; i < n; i++) {
-        if (p_and_index_sorted[i].value !== p_and_index_sorted[i - 1]?.value) {
+        if (i === 0 || indexedValue_sorted[i].value !== indexedValue_sorted[i - 1].value) {
             rank = i + 1;
         }
-        p_and_index_sorted[i].rank = rank;
+        indexedValue_sorted[i].rank = rank;
     }
 
-    // console.log(p_and_index);
-    // console.log(p_and_index_sorted);
+    // 元の順序にランクをマッピング
+    indexedValue_sorted.forEach(item => {
+        indexedValue[item.index].rank = item.rank;
+    });
 
+    // 結果を出力
     for (let i = 0; i < n; i++) {
-        console.log(p_and_index[i].rank);
+        console.log(indexedValue[i].rank);
     }
 }
 
