@@ -1,8 +1,29 @@
 function Main(input) {
-    const test1 = Number(input[0]);
-    const test2 = input[1].split(" ").map(Number);
-    console.log(test1);
-    console.log(test2);
+    let count_err = 0;
+
+    const n = Number(input[0]);
+
+    let flag = "logout";
+    for (let i = 1; i <= n; i++) {
+        const s = input[i];
+        switch (s) {
+            case "logout":
+                flag = "logout";
+                break;
+            case "login":
+                flag = "login";
+                break;
+            case "public":
+                break;
+            case "private":
+                if (flag !== "login") {
+                    count_err++;
+                }
+                break;
+        }
+    }
+    
+    console.log(count_err);
 }
 
 Main(require("fs").readFileSync("/dev/stdin", "utf8").split("\n"));
