@@ -1,8 +1,10 @@
 function Main(input) {
-    const test1 = Number(input[0]);
-    const test2 = input[1].split(" ").map(Number);
-    console.log(test1);
-    console.log(test2);
+    const [a, b] = input[0].split(" ").map(Number);
+    const divide = a / b;
+    const divide_floor = Math.floor(divide);
+    const divide_ceil = Math.ceil(divide);
+    const answer = (divide - divide_floor) < (divide_ceil - divide) ? divide_floor : divide_ceil;
+    console.log(answer);
 }
 
 Main(require("fs").readFileSync("/dev/stdin", "utf8").split("\n"));
