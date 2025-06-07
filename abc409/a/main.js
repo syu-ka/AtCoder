@@ -1,8 +1,12 @@
 function Main(input) {
-    const test1 = Number(input[0]);
-    const test2 = input[1].split(" ").map(Number);
-    console.log(test1);
-    console.log(test2);
+    const n = Number(input[0]);
+    const t = input[1].split("");
+    const a = input[2].split("");
+
+    for (let i = 0; i < n; i++) {
+        if (t[i] === "o" && a[i] === "o") return console.log("Yes");
+    }
+    console.log("No");
 }
 
 Main(require("fs").readFileSync("/dev/stdin", "utf8").split("\n"));
