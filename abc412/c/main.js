@@ -17,14 +17,11 @@ function Main(input) {
 
         s_sorted.push(s[testCase].sort((a, b) => a - b));
 
-        if (s_first[testCase] >= s_last[testCase]) {
+        if (s_first[testCase] >= s_last[testCase]) { // s_1のドミノがs_nのドミノより大きい場合、ドミノの並べ方をs_1,s_nの2枚とすることで、s_1とs_nどちらのドミノも倒せるため、最小のドミノの枚数は2枚.
             console.log(2);
             testCase++;
             continue;
         }
-
-        // console.log("testCase:", testCase, ",n:", n[testCase], "s:", s[testCase], ",s_first:", s_first[testCase], ",s_last:", s_last[testCase],
-        //     ",s_sorted:", s_sorted[testCase]);
 
         s_first_index = s_sorted[testCase].indexOf(s_first[testCase]);
         // s_first_index: 現在のテストケースのs_1のs_sortedのインデックス
@@ -48,7 +45,6 @@ function Main(input) {
                 is_domino_failed = true;
                 break;
             }
-            // console.log("prev_index:", prev_index, "next_index:", next_index);
 
             required_domino_count++;
             // 必要なドミノの数をカウント
