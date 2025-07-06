@@ -1,15 +1,15 @@
 {
   "contest": {
-    "id": "abc412",
-    "title": "AtCoder Beginner Contest 412",
-    "url": "https://atcoder.jp/contests/abc412"
+    "id": "abc413",
+    "title": "Denso Create Programming Contest 2025（AtCoder Beginner Contest 413）",
+    "url": "https://atcoder.jp/contests/abc413"
   },
   "tasks": [
     {
-      "id": "abc412_a",
+      "id": "abc413_a",
       "label": "A",
-      "title": "Task Failed Successfully",
-      "url": "https://atcoder.jp/contests/abc412/tasks/abc412_a",
+      "title": "Content Too Large",
+      "url": "https://atcoder.jp/contests/abc413/tasks/abc413_a",
       "directory": {
         "path": "a",
         "testdir": "js",
@@ -17,10 +17,10 @@
       }
     },
     {
-      "id": "abc412_b",
+      "id": "abc413_b",
       "label": "B",
-      "title": "Precondition",
-      "url": "https://atcoder.jp/contests/abc412/tasks/abc412_b",
+      "title": "cat 2",
+      "url": "https://atcoder.jp/contests/abc413/tasks/abc413_b",
       "directory": {
         "path": "b",
         "testdir": "js",
@@ -28,10 +28,10 @@
       }
     },
     {
-      "id": "abc412_c",
+      "id": "abc413_c",
       "label": "C",
-      "title": "Giant Domino",
-      "url": "https://atcoder.jp/contests/abc412/tasks/abc412_c",
+      "title": "Large Queue",
+      "url": "https://atcoder.jp/contests/abc413/tasks/abc413_c",
       "directory": {
         "path": "c",
         "testdir": "js",
@@ -39,10 +39,10 @@
       }
     },
     {
-      "id": "abc412_d",
+      "id": "abc413_d",
       "label": "D",
-      "title": "Make 2-Regular Graph",
-      "url": "https://atcoder.jp/contests/abc412/tasks/abc412_d",
+      "title": "Make Geometric Sequence",
+      "url": "https://atcoder.jp/contests/abc413/tasks/abc413_d",
       "directory": {
         "path": "d",
         "testdir": "js",
@@ -50,10 +50,10 @@
       }
     },
     {
-      "id": "abc412_e",
+      "id": "abc413_e",
       "label": "E",
-      "title": "LCM Sequence",
-      "url": "https://atcoder.jp/contests/abc412/tasks/abc412_e",
+      "title": "Reverse 2^i",
+      "url": "https://atcoder.jp/contests/abc413/tasks/abc413_e",
       "directory": {
         "path": "e",
         "testdir": "js",
@@ -61,10 +61,10 @@
       }
     },
     {
-      "id": "abc412_f",
+      "id": "abc413_f",
       "label": "F",
-      "title": "Socks 4",
-      "url": "https://atcoder.jp/contests/abc412/tasks/abc412_f",
+      "title": "No Passage",
+      "url": "https://atcoder.jp/contests/abc413/tasks/abc413_f",
       "directory": {
         "path": "f",
         "testdir": "js",
@@ -72,10 +72,10 @@
       }
     },
     {
-      "id": "abc412_g",
+      "id": "abc413_g",
       "label": "G",
-      "title": "Degree Harmony",
-      "url": "https://atcoder.jp/contests/abc412/tasks/abc412_g",
+      "title": "Big Banned Grid",
+      "url": "https://atcoder.jp/contests/abc413/tasks/abc413_g",
       "directory": {
         "path": "g",
         "testdir": "js",
