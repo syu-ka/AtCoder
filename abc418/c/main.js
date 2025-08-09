@@ -5,18 +5,21 @@ function Main(input) {
     const a_max = a[a.length - 1];
     console.log(n, q, a, a_max);
     let count = {};
-    count[0] = 0; // 初期値として0を設定
+    count[1] = 1; // 初期値として1を設定
     let tmp_count = 0;
-    let tmp_continuous_count = 0;
+    for (let i = 1; i <= a_max; i++) {
+        // if ()
+    }
     for (let i = 0; i < n; i++) {
         tmp_count += a[i];
-        if (a[i] !== a[i - 1] || i === 0) {
-            tmp_continuous_count = 1;
-            count[a[i]] = tmp_count;
-        } else {
-            tmp_continuous_count++;
-            count[a[i]] = tmp_count - tmp_continuous_count;
-        }
+        count[a[i] + 1] = tmp_count + a[i];
+        // if (a[i] !== a[i - 1] || i === 0) {
+        //     tmp_continuous_count = 1;
+        //     count[a[i]] = tmp_count;
+        // } else {
+        //     tmp_continuous_count++;
+        //     count[a[i]] = tmp_count - tmp_continuous_count;
+        // }
     }
     console.log(count);
     for (let i = a_max; i >= 0; i--) {
