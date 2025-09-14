@@ -1,8 +1,12 @@
 function Main(input) {
-    const test1 = Number(input[0]);
-    const test2 = input[1].split(" ").map(Number);
-    console.log(test1);
-    console.log(test2);
+    let [i, j] = input[0].split("-").map(Number);
+    if (j < 8) {
+        j++;
+    } else if (i < 8) {
+        i++;
+        j = 1;
+    }
+    console.log(`${i}-${j}`);
 }
 
 Main(require("fs").readFileSync("/dev/stdin", "utf8").split("\n"));
