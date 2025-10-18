@@ -1,8 +1,50 @@
 function Main(input) {
-    const test1 = Number(input[0]);
-    const test2 = input[1].split(" ").map(Number);
-    console.log(test1);
-    console.log(test2);
+    const q = Number(input[0]);
+    let type = [];
+    let b = [];
+    let stack = 0;
+    let isNice = false;
+    for (let i = 1; i <= q; i++) {
+        type.push(input[i].split(" ")[0]);
+        if (input[i].split(" ")[1]) {
+            b.push(input[i].split(" ")[1]);
+        }
+
+        // console.log(`----i=${i}----`);
+
+        if (type[type.length - 1] == "1") {
+            if (b[b.length - 1] === "(") {
+                stack++;
+                isNice = false;
+            } else if (b[b.length - 1] === ")") {
+                stack--;
+                if (stack === 0) {
+                    isNice = true;
+                } else {
+                    isNice = false;
+                }
+            }
+        } else {
+            let b_pop = b.pop();
+            if (b_pop === "(") {
+                stack--;
+                if (stack === 0) {
+                    isNice = true;
+                } else {
+                    isNice = false;
+                }
+            } else if (b_pop === ")") {
+                stack++;
+                isNice = false;
+            }
+        }
+        // console.log(b);
+        if (isNice) {
+            console.log("Yes");
+        } else {
+            console.log("No");
+        }
+    }
 }
 
 Main(require("fs").readFileSync("/dev/stdin", "utf8").split("\n"));
