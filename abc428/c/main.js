@@ -2,8 +2,8 @@ function Main(input) {
     const q = Number(input[0]);
     let type = [];
     let b = [];
-    let stack = 0;
-    let isNice = false;
+    let stack = [];
+    let shift_continue_count = 0;
     for (let i = 1; i <= q; i++) {
         type.push(input[i].split(" ")[0]);
         if (input[i].split(" ")[1]) {
@@ -14,32 +14,28 @@ function Main(input) {
 
         if (type[type.length - 1] == "1") {
             if (b[b.length - 1] === "(") {
-                stack++;
-                isNice = false;
+                stack.unshift("(");
             } else if (b[b.length - 1] === ")") {
-                stack--;
-                if (stack === 0) {
-                    isNice = true;
+                if (stack.length === 0) {
+                    shift_continue_count = 0;
                 } else {
-                    isNice = false;
+                    shift_continue_count++;
+                    stack.shift();
                 }
             }
         } else {
             let b_pop = b.pop();
             if (b_pop === "(") {
-                stack--;
-                if (stack === 0) {
-                    isNice = true;
-                } else {
-                    isNice = false;
-                }
+                stack.pop();
             } else if (b_pop === ")") {
-                stack++;
-                isNice = false;
+                if (shift_continue_count > 0) {
+                    stack.unshift("(");
+                    shift_continue_count--;
+                }
             }
         }
         // console.log(b);
-        if (isNice) {
+        if (stack.length == 0) {
             console.log("Yes");
         } else {
             console.log("No");
