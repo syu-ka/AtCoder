@@ -1,8 +1,13 @@
 function Main(input) {
-    const test1 = Number(input[0]);
-    const test2 = input[1].split(" ").map(Number);
-    console.log(test1);
-    console.log(test2);
+    const n = Number(input[0]);
+    const robot = [{}];
+    for (let i = 0; i < n; i++) {
+        const w = input[i + 1].split(" ").map(Number)[0];
+        const h = input[i + 1].split(" ").map(Number)[1];
+        const b = input[i + 1].split(" ").map(Number)[2];
+        robot[i] = { weight: w, head: h, body: b };
+    }
+    console.log(robot);
 }
 
 Main(require("fs").readFileSync("/dev/stdin", "utf8").split("\n"));
