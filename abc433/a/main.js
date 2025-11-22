@@ -1,8 +1,13 @@
 function Main(input) {
-    const test1 = Number(input[0]);
-    const test2 = input[1].split(" ").map(Number);
-    console.log(test1);
-    console.log(test2);
+    const [x, y, z] = input[0].split(" ").map(Number);
+    let max = Math.max(100 - x, 100 - y);
+    for (let i = 0; i <= max; i++) {
+        if (x + i == (y + i) * z) {
+            console.log("Yes");
+            return;
+        }
+    }
+    console.log("No");
 }
 
 Main(require("fs").readFileSync("/dev/stdin", "utf8").split("\n"));
