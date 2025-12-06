@@ -1,8 +1,10 @@
 function Main(input) {
-    const test1 = Number(input[0]);
-    const test2 = input[1].split(" ").map(Number);
-    console.log(test1);
-    console.log(test2);
+    let sum_answer = 0;
+    const N = Number(input[0]);
+    for (let i = 1; i <= N; i++) {
+        sum_answer += i;
+    }
+    console.log(sum_answer);
 }
 
 Main(require("fs").readFileSync("/dev/stdin", "utf8").split("\n"));
